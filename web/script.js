@@ -1,5 +1,39 @@
 var idOfEditTask = 0;
 
+window.onload = async function () {
+  closeEventPupup();
+
+  AddHourLinesForDay();
+
+  // add hours column in table
+  var hour = 0;
+  for (let i = 0; i < 23; i++) {
+    var iDiv = document.createElement("div");
+    iDiv.className = "hour";
+    hour += 1;
+
+    var text = document.createElement("div");
+    text.innerHTML = hour + ":00";
+    text.style.fontSize = "small";
+    iDiv.appendChild(text);
+
+    iDiv.style.top = 2 + "%";
+    document.getElementById("7").appendChild(iDiv);
+  }
+
+  var startOfTheWeek = new Date();
+
+  setDayTitle(0);
+
+  let dayOfWeek = startOfTheWeek.getDay();
+  let firstDay = new Date();
+  firstDay.setDate(startOfTheWeek.getDate() - dayOfWeek - 1);
+  startOfTheWeek = firstDay;
+  startOfTheWeek.setHours(0, 0, 0, 0);
+
+  await getTasksOfCurrentWeek(startOfTheWeek);
+};
+
 function addEvent() {
   var start_time = document.getElementById("start_time").timestamp;
   var end_time = document.getElementById("end_time").timestamp;
@@ -33,6 +67,20 @@ function addEvent() {
   document.getElementById("priority").value = "";
 
   closeEventPupup();
+}
+
+// add line for start of the hour in each day
+function AddHourLinesForDay() {
+  for (let j = 0; j < 7; j++) {
+    var num = 0;
+    for (let i = 0; i < 23; i++) {
+      var iDiv = document.createElement("div");
+      iDiv.className = "line";
+      num += 4;
+      iDiv.style.top = num + "%";
+      document.getElementById(j).appendChild(iDiv);
+    }
+  }
 }
 
 function EditEvent() {
@@ -115,59 +163,7 @@ function closeEventPupup() {
   document.getElementById("eventPupup").style.visibility = "hidden";
 }
 
-window.onload = async function () {
-  closeEventPupup();
-
-  for (let j = 0; j < 7; j++) {
-    var num = 0;
-    for (let i = 0; i < 23; i++) {
-      var iDiv = document.createElement("div");
-      iDiv.className = "line";
-      num += 4;
-      iDiv.style.top = num + "%";
-      document.getElementById(j).appendChild(iDiv);
-    }
-  }
-
-  var hour = 0;
-  for (let i = 0; i < 23; i++) {
-    var iDiv = document.createElement("div");
-    iDiv.className = "hour";
-    hour += 1;
-
-    var text = document.createElement("div");
-    text.innerHTML = hour + ":00";
-    text.style.fontSize = "small";
-    iDiv.appendChild(text);
-
-    iDiv.style.top = 2 + "%";
-    var hourDiv = document.getElementById("7").appendChild(iDiv);
-  }
-
-  var startOfTheWeek = new Date();
-
-  // set dates of the week
-  for (let i = 0; i < 7; i++) {
-    let today = new Date();
-    let dayOfWeek = today.getDay();
-    let firstDay = new Date();
-    firstDay.setDate(today.getDate() - dayOfWeek + 5 - i);
-
-    function formatDate(date) {
-      let options = {
-        month: "long",
-        day: "numeric",
-      };
-      return date.toLocaleDateString("fa-IR", options);
-    }
-
-    let formattedDate = formatDate(firstDay);
-    weekDays = document.getElementById("week_days-" + String(i));
-    weekDays.innerHTML = formattedDate;
-    startOfTheWeek = firstDay;
-  }
-
-  startOfTheWeek.setHours(0, 0, 0, 0);
+async function getTasksOfCurrentWeek(startOfTheWeek) {
   var timestampToday = startOfTheWeek.getTime();
   timestampToday = ~~(timestampToday / 1000);
   for (let i = 0; i < 7; i++) {
@@ -196,7 +192,6 @@ window.onload = async function () {
         ((taskEndDateToSeconds - taskStartDateToSeconds) * 100) / 86400 + "%";
       iDiv.innerHTML = taskTitle;
       iDiv.className = "task";
-      console.log(json.tasks[j]);
       iDiv.onclick = (function (
         taskId,
         taskStartDate,
@@ -227,7 +222,31 @@ window.onload = async function () {
     }
     timestampToday += 60 * 60 * 24;
   }
-};
+}
+
+// set dates of the week on title of each day
+function setDayTitle(diffFromCurentWeek) {
+  for (let i = 0; i < 7; i++) {
+    let today = new Date();
+    let dayOfWeek = today.getDay();
+    let firstDay = new Date();
+    firstDay.setDate(
+      today.getDate() - dayOfWeek + 5 - i + 7 * diffFromCurentWeek
+    );
+
+    function formatDate(date) {
+      let options = {
+        month: "long",
+        day: "numeric",
+      };
+      return date.toLocaleDateString("fa-IR", options);
+    }
+
+    let formattedDate = formatDate(firstDay);
+    weekDays = document.getElementById("week_days-" + String(i));
+    weekDays.innerHTML = formattedDate;
+  }
+}
 
 async function getTask(start_time, end_time) {
   try {
@@ -250,10 +269,44 @@ async function getTask(start_time, end_time) {
   }
 }
 
-function nextWeek() {
-  alert("goToNextWeek not implemented");
-}
+var diffFromCurentWeek = 0;
+async function goToNextWeek() {
+  diffFromCurentWeek++;
+  setDayTitle(diffFromCurentWeek);
 
-function goToLastWeek() {
-  alert("goToLastWeek not implemented");
+  for (let i = 0; i < 7; i++) {
+    document.getElementById(i).innerHTML = "";
+  }
+  AddHourLinesForDay();
+
+  let today = new Date();
+  let dayOfWeek = today.getDay();
+  let firstDay = new Date();
+  firstDay.setDate(
+    today.getDate() - dayOfWeek - 1 + 7 * diffFromCurentWeek
+  );
+  today = firstDay;
+  today.setHours(0, 0, 0, 0);
+
+  await getTasksOfCurrentWeek(today);
+}
+async function goToLastWeek() {
+  diffFromCurentWeek--;
+  setDayTitle(diffFromCurentWeek);
+
+  for (let i = 0; i < 7; i++) {
+    document.getElementById(i).innerHTML = "";
+  }
+  AddHourLinesForDay();
+
+  let today = new Date();
+  let dayOfWeek = today.getDay();
+  let firstDay = new Date();
+  firstDay.setDate(
+    today.getDate() - dayOfWeek - 1 + 7 * diffFromCurentWeek
+  );
+  today = firstDay;
+  today.setHours(0, 0, 0, 0);
+
+  await getTasksOfCurrentWeek(today);
 }

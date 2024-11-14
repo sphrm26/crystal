@@ -150,6 +150,8 @@ window.onload = async function () {
     var hourDiv = document.getElementById("7").appendChild(iDiv);
   }
 
+  var startOfTheWeek = new Date()
+
   // set dates of the week
   for (let i = 0; i < 7; i++) {
     let today = new Date();
@@ -166,13 +168,13 @@ window.onload = async function () {
     }
 
     let formattedDate = formatDate(firstDay);
-    weekDays = document.getElementById("week_days-"+ String(i))
-    weekDays.innerHTML = formattedDate
+    weekDays = document.getElementById("week_days-" + String(i));
+    weekDays.innerHTML = formattedDate;
+    startOfTheWeek = firstDay
   }
 
-  var today = new Date();
-  today.setHours(0, 0, 0, 0);
-  var timestampToday = today.getTime();
+  startOfTheWeek.setHours(0, 0, 0, 0);
+  var timestampToday = startOfTheWeek.getTime();
   timestampToday = ~~(timestampToday / 1000);
   for (let i = 0; i < 7; i++) {
     var json = await getTask(timestampToday, timestampToday + 60 * 60 * 24);

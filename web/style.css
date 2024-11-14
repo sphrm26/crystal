@@ -1,0 +1,107 @@
+.week_schedule {
+    font-size: x-large;
+    text-align: center;
+    color: rgb(66, 218, 167);
+    background-color: rgb(28, 77, 89);
+    border: 1px solid aquamarine;
+    width: 100%;
+    height: 90%;
+    padding: 2%;
+    justify-content: center;
+    vertical-align: middle;
+    display: flex;
+    /* Make it a flex container */
+    flex-direction: row;
+    /* Arrange items vertically */
+    align-items: center;
+    /* Center items vertically */
+}
+
+.dayHours {
+    font-size: x-large;
+    text-align: center;
+    color: rgb(1, 177, 10);
+    background-color: rgb(14, 56, 1);
+    border: 1px solid rgb(178, 255, 127);
+    width: 100%;
+    height: 90%;
+    justify-content: center;
+    flex: 1;
+    /* Make each day div take equal space */
+    position: relative;
+}
+
+.line {
+    background-color: red;
+    width: 100%;
+    height: 0.2%;
+    top: 4%;
+    position: relative;
+}
+
+.hour {
+    width: 100%;
+    position: relative;
+    height: 4.25%;
+}
+
+.task {
+    color: black;
+    background-color: darkorange;
+    position: absolute;
+    width: 100%;
+    height: 4.166666667%;
+    top: 50%;
+    z-index: 1;
+    text-align: center;
+}
+
+.cont {
+    width: 100%;
+    height: 100%;
+}
+
+.button {
+    width: 9%;
+    height: 6%;
+    border-radius: 50%;
+    background-color: rgb(221, 57, 57);
+    align-self: flex-start;
+}
+
+.eventPupup {
+    visibility: visible;
+    position: fixed;
+    display: inline-block;
+    cursor: pointer;
+    background-color: aliceblue;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    text-align: center;
+    z-index: 2  ;
+}
+
+.addEventForm{
+    background-color: blueviolet;
+    width: 95%;
+    height: 80%;
+    top: 5%;
+    left: 2.5%;
+    position: relative;
+}
+
+.buttonSubmit{
+    position: relative;
+    top: 0%;
+    border-radius: 50%;
+    background-color: rgb(221, 57, 57);
+}
+
+html,
+body,
+#wrapper {
+    width: 100%;
+    height: 100%;
+}

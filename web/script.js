@@ -117,9 +117,6 @@ function closeEventPupup() {
 
 window.onload = async function () {
   closeEventPupup();
-  // let options = { year: 'numeric', month: 'numeric', day: 'numeric' };
-  // let today = new Date().toLocaleDateString('fa-IR', options);
-  // console.log(today);
 
   for (let j = 0; j < 7; j++) {
     var num = 0;
@@ -140,9 +137,6 @@ window.onload = async function () {
 
     var text = document.createElement("div");
     text.innerHTML = hour + ":00";
-    // text.style.border = "1px";
-    // text.style.borderColor = "white";
-    // text.style.borderBlockStyle = "solid";
     text.style.fontSize = "small";
     iDiv.appendChild(text);
 

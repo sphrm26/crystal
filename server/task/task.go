@@ -51,6 +51,8 @@ func (t *Manager) AddTask(task Task) {
 func (t *Manager) EditTask(id int, task Task) {
 	t.Tasks[id] = &task
 	t.Tasks[id].ID = id
+
+	fmt.Println("[EditTask]:", t.Tasks[id])
 }
 
 func (t *Manager) CompeleteTask(id int) {

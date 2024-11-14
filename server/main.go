@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"file/task"
 	"fmt"
@@ -9,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 	"net/http"
-	"os/exec"
 	"time"
 )
 
@@ -78,17 +76,17 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"tasks": tasks})
 	})
 
-	go func() {
-		var stdout bytes.Buffer
-		var stderr bytes.Buffer
-		cmd := exec.Command("sh", "-c", "cd /web && serve -p 3001")
-		cmd.Stdout = &stdout
-		cmd.Stderr = &stderr
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println("error in run html server", stderr.String())
-		}
-	}()
+	//go func() {
+	//	var stdout bytes.Buffer
+	//	var stderr bytes.Buffer
+	//	cmd := exec.Command("sh", "-c", "cd /web && serve -p 3001")
+	//	cmd.Stdout = &stdout
+	//	cmd.Stderr = &stderr
+	//	err := cmd.Run()
+	//	if err != nil {
+	//		fmt.Println("error in run html server", stderr.String())
+	//	}
+	//}()
 
 	err := router.Run("127.0.0.1:8080")
 	if err != nil {

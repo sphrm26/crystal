@@ -150,7 +150,7 @@ window.onload = async function () {
     var hourDiv = document.getElementById("7").appendChild(iDiv);
   }
 
-  var startOfTheWeek = new Date()
+  var startOfTheWeek = new Date();
 
   // set dates of the week
   for (let i = 0; i < 7; i++) {
@@ -170,7 +170,7 @@ window.onload = async function () {
     let formattedDate = formatDate(firstDay);
     weekDays = document.getElementById("week_days-" + String(i));
     weekDays.innerHTML = formattedDate;
-    startOfTheWeek = firstDay
+    startOfTheWeek = firstDay;
   }
 
   startOfTheWeek.setHours(0, 0, 0, 0);
@@ -254,4 +254,12 @@ async function getTask(start_time, end_time) {
     console.error("Error fetching tasks:", error);
     return null;
   }
+}
+
+function nextWeek() {
+  alert("goToNextWeek not implemented");
+}
+
+function goToLastWeek() {
+  alert("goToLastWeek not implemented");
 }

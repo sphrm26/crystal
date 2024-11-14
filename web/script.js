@@ -245,6 +245,12 @@ function setDayTitle(diffFromCurentWeek) {
     let formattedDate = formatDate(firstDay);
     weekDays = document.getElementById("week_days-" + String(i));
     weekDays.innerHTML = formattedDate;
+    if (new Date().getDate() == firstDay.getDate()) {
+        weekDays.style.backgroundColor = "gold";
+    }
+    else{
+        weekDays.style.backgroundColor = "rgb(28, 77, 89)";
+    }
   }
 }
 
@@ -282,9 +288,7 @@ async function goToNextWeek() {
   let today = new Date();
   let dayOfWeek = today.getDay();
   let firstDay = new Date();
-  firstDay.setDate(
-    today.getDate() - dayOfWeek - 1 + 7 * diffFromCurentWeek
-  );
+  firstDay.setDate(today.getDate() - dayOfWeek - 1 + 7 * diffFromCurentWeek);
   today = firstDay;
   today.setHours(0, 0, 0, 0);
 
@@ -302,9 +306,7 @@ async function goToLastWeek() {
   let today = new Date();
   let dayOfWeek = today.getDay();
   let firstDay = new Date();
-  firstDay.setDate(
-    today.getDate() - dayOfWeek - 1 + 7 * diffFromCurentWeek
-  );
+  firstDay.setDate(today.getDate() - dayOfWeek - 1 + 7 * diffFromCurentWeek);
   today = firstDay;
   today.setHours(0, 0, 0, 0);
 

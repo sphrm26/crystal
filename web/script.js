@@ -51,6 +51,8 @@ function addEvent() {
       description: description,
       duration: duration,
       priority: priority,
+      user_name: "test",
+      password: "QQQ111qqq",
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -111,6 +113,8 @@ function EditEvent() {
       description: description,
       duration: duration,
       priority: priority,
+      user_name: "test",
+      password: "QQQ111qqq",
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -246,10 +250,9 @@ function setDayTitle(diffFromCurentWeek) {
     weekDays = document.getElementById("week_days-" + String(i));
     weekDays.innerHTML = formattedDate;
     if (new Date().getDate() == firstDay.getDate()) {
-        weekDays.style.backgroundColor = "gold";
-    }
-    else{
-        weekDays.style.backgroundColor = "rgb(28, 77, 89)";
+      weekDays.style.backgroundColor = "gold";
+    } else {
+      weekDays.style.backgroundColor = "rgb(28, 77, 89)";
     }
   }
 }
@@ -261,6 +264,8 @@ async function getTask(start_time, end_time) {
       body: JSON.stringify({
         start_time: start_time,
         end_time: end_time,
+        user_name: "test",
+        password: "QQQ111qqq",
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",

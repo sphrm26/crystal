@@ -1,0 +1,54 @@
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+
+.card {
+  width: 500px;
+  height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.time{
+  font-size: 50px;
+}
+/* .btn-container {
+  margin-top: 20px;
+} */
+
+button {
+  margin: 0 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #a8acb0;
+}
+
+
+/* --------------------------------- */
+
+.calender-container{
+  padding: 20px;
+}
+
+.btn-events{
+  background-color: rgb(53, 142, 221);
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.btn-container{
+  margin-bottom: 10px;
+}

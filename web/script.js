@@ -252,7 +252,7 @@ function setDayTitle(diffFromCurentWeek) {
     if (new Date().getDate() == firstDay.getDate()) {
       weekDays.style.backgroundColor = "gold";
     } else {
-      weekDays.style.backgroundColor = "rgb(28, 77, 89)";
+      weekDays.style.backgroundColor = "rgb(234, 188, 255)";
     }
   }
 }

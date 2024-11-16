@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import Sidebar from './component/Sidebar.jsx';
-import './App.css';
+import { useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import Sidebar from "./component/Sidebar.jsx";
+import "./App.css";
 
 const localizer = momentLocalizer(moment);
 
@@ -22,12 +22,16 @@ const App = () => {
   };
 
   const handleEditEvent = (updatedEvent) => {
-    setEvents(events.map(event => (event.id === updatedEvent.id ? updatedEvent : event)));
+    setEvents(
+      events.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      )
+    );
     setShowOffcanvas(false);
   };
 
   const handleDeleteEvent = (id) => {
-    setEvents(events.filter(event => event.id !== id));
+    setEvents(events.filter((event) => event.id !== id));
     setShowOffcanvas(false);
   };
 
@@ -37,9 +41,15 @@ const App = () => {
   };
 
   return (
-    <div className='calender-container'>
-      <div className='btn-container'>
-        <button className="btn-event" onClick={() => { setSelectedEvent(null); toggleOffcanvas(); }}>
+    <div className="calender-container">
+      <div className="btn-container">
+        <button
+          className="btn-event"
+          onClick={() => {
+            setSelectedEvent(null);
+            toggleOffcanvas();
+          }}
+        >
           Add Event
         </button>
       </div>
@@ -56,7 +66,7 @@ const App = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '100vh' }}
+        style={{ height: "85vh" }}
         onSelectEvent={handleSelectEvent}
       />
     </div>

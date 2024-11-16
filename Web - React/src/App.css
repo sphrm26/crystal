@@ -52,3 +52,11 @@ button:hover {
 .btn-container{
   margin-bottom: 10px;
 }
+
+.rbc-calendar {
+  direction: rtl;
+  text-align: right;
+}
+.rbc-toolbar button {
+  direction: rtl;
+}

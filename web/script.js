@@ -42,7 +42,7 @@ function addEvent() {
   var duration = document.getElementById("duration").value;
   var priority = document.getElementById("priority").value;
 
-  fetch("http://185.220.227.124/8080/addTask", {
+  fetch("http://185.220.227.124:8080/addTask", {
     method: "POST",
     body: JSON.stringify({
       start_time: start_time,

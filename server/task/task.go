@@ -19,7 +19,7 @@ type Task struct {
 	Description string
 	Priority    uint8
 	Group       Group
-	ID          int
+	ID          int64
 	IsDone      bool
 }
 
@@ -29,14 +29,14 @@ type Group struct {
 }
 
 type Manager struct {
-	Tasks          map[int]*Task
+	Tasks          map[int64]*Task
 	Groups         map[int]*Group
-	TaskIdSequence int
+	TaskIdSequence int64
 }
 
 func NewTaskManager() Manager {
 	return Manager{
-		Tasks:          make(map[int]*Task),
+		Tasks:          make(map[int64]*Task),
 		Groups:         make(map[int]*Group),
 		TaskIdSequence: 1,
 	}
@@ -48,14 +48,14 @@ func (t *Manager) AddTask(task Task) {
 	t.TaskIdSequence++
 }
 
-func (t *Manager) EditTask(id int, task Task) {
+func (t *Manager) EditTask(id int64, task Task) {
 	t.Tasks[id] = &task
 	t.Tasks[id].ID = id
 
 	fmt.Println("[EditTask]:", t.Tasks[id])
 }
 
-func (t *Manager) CompeleteTask(id int) {
+func (t *Manager) CompeleteTask(id int64) {
 	t.Tasks[id].IsDone = true
 }
 

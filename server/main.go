@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"file/task"
+	"file/db"
 	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	taskManager := task.NewTaskManager()
+	taskRepo := db.NewTaskRepo()
 
 	router := gin.Default()
 
@@ -25,19 +25,17 @@ func main() {
 			return
 		}
 
-		taskManager.AddTask(task.Task{
-			PlanedTime: &task.PlanedTime{
-				EstimatedTime: 0,
-				StartTime:     time.Unix(cast.ToInt64(data["start_time"]), 0),
-				EndTime:       time.Unix(cast.ToInt64(data["end_time"]), 0),
-				DoneStartTime: time.Time{},
-				DoneEndTime:   time.Time{},
-			},
-			Title:       cast.ToString(data["title"]),
-			Description: cast.ToString(data["description"]),
-			Priority:    cast.ToUint8(data["priority"]),
-			Group:       task.Group{},
-		})
+		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
+
+		err = taskRepo.AddTask(
+			cast.ToString(data["title"]),
+			time.Unix(cast.ToInt64(data["start_time"]), 0),
+			time.Unix(cast.ToInt64(data["end_time"]), 0),
+			userId)
+		if err != nil {
+			return
+		}
+
 		c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	})
 
@@ -48,19 +46,19 @@ func main() {
 			return
 		}
 
-		taskManager.EditTask(cast.ToInt(data["id"]), task.Task{
-			PlanedTime: &task.PlanedTime{
-				EstimatedTime: 0,
-				StartTime:     time.Unix(cast.ToInt64(data["start_time"]), 0),
-				EndTime:       time.Unix(cast.ToInt64(data["end_time"]), 0),
-				DoneStartTime: time.Time{},
-				DoneEndTime:   time.Time{},
-			},
-			Title:       cast.ToString(data["title"]),
-			Description: cast.ToString(data["description"]),
-			Priority:    cast.ToUint8(data["priority"]),
-			Group:       task.Group{},
-		})
+		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
+
+		err = taskRepo.EditTask(
+			cast.ToInt64(data["id"]),
+			cast.ToString(data["title"]),
+			time.Unix(cast.ToInt64(data["start_time"]), 0),
+			time.Unix(cast.ToInt64(data["end_time"]), 0),
+			userId,
+		)
+		if err != nil {
+			return
+		}
+
 		c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	})
 
@@ -71,24 +69,18 @@ func main() {
 			return
 		}
 
-		tasks := taskManager.GetTaskByDate(time.Unix(cast.ToInt64(data["start_time"]), 0), time.Unix(cast.ToInt64(data["end_time"]), 0))
+		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
+
+		tasks := taskRepo.GetTasksByDate(
+			time.Unix(cast.ToInt64(data["start_time"]), 0),
+			time.Unix(cast.ToInt64(data["end_time"]), 0),
+			userId,
+		)
 
 		c.JSON(http.StatusOK, gin.H{"tasks": tasks})
 	})
 
-	//go func() {
-	//	var stdout bytes.Buffer
-	//	var stderr bytes.Buffer
-	//	cmd := exec.Command("sh", "-c", "cd /web && serve -p 3001")
-	//	cmd.Stdout = &stdout
-	//	cmd.Stderr = &stderr
-	//	err := cmd.Run()
-	//	if err != nil {
-	//		fmt.Println("error in run html server", stderr.String())
-	//	}
-	//}()
-
-	err := router.Run("127.0.0.1:8080")
+	err := router.Run("0.0.0.0:8080")
 	if err != nil {
 		return
 	}

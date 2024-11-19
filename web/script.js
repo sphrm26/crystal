@@ -42,7 +42,7 @@ function addEvent() {
   var duration = document.getElementById("duration").value;
   var priority = document.getElementById("priority").value;
 
-  fetch("http://127.0.0.1:8080/addTask", {
+  fetch("http://185.220.227.124/8080/addTask", {
     method: "POST",
     body: JSON.stringify({
       start_time: start_time,
@@ -51,6 +51,8 @@ function addEvent() {
       description: description,
       duration: duration,
       priority: priority,
+      user_name: "test",
+      password: "QQQ111qqq",
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -101,7 +103,7 @@ function EditEvent() {
     priority
   );
 
-  fetch("http://127.0.0.1:8080/EditTask", {
+  fetch("http://185.220.227.124:8080/EditTask", {
     method: "POST",
     body: JSON.stringify({
       id: idOfEditTask,
@@ -111,6 +113,8 @@ function EditEvent() {
       description: description,
       duration: duration,
       priority: priority,
+      user_name: "test",
+      password: "QQQ111qqq",
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -246,21 +250,22 @@ function setDayTitle(diffFromCurentWeek) {
     weekDays = document.getElementById("week_days-" + String(i));
     weekDays.innerHTML = formattedDate;
     if (new Date().getDate() == firstDay.getDate()) {
-        weekDays.style.backgroundColor = "gold";
-    }
-    else{
-        weekDays.style.backgroundColor = "rgb(28, 77, 89)";
+      weekDays.style.backgroundColor = "gold";
+    } else {
+      weekDays.style.backgroundColor = "rgb(234, 188, 255)";
     }
   }
 }
 
 async function getTask(start_time, end_time) {
   try {
-    const response = await fetch("http://127.0.0.1:8080/getTasks", {
+    const response = await fetch("http://185.220.227.124:8080/getTasks", {
       method: "POST",
       body: JSON.stringify({
         start_time: start_time,
         end_time: end_time,
+        user_name: "test",
+        password: "QQQ111qqq",
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",

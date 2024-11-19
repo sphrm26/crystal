@@ -1,9 +1,9 @@
 .week_schedule {
     font-size: x-large;
     text-align: center;
-    color: rgb(66, 218, 167);
-    background-color: rgb(28, 77, 89);
-    border: 1px solid aquamarine;
+    color: rgb(30, 5, 46);
+    background-color: rgb(221, 185, 255);
+    border: 1px solid rgb(223, 182, 255);
     width: 100%;
     height: 90%;
     padding: 2%;
@@ -20,8 +20,8 @@
 .week_days {
     display: flex;
     justify-content: space-around;
-    background-color: rgb(28, 77, 89);
-    color: rgb(66, 218, 167);
+    background-color: rgb(234, 188, 255);
+    color: rgb(30, 5, 46);
     width: 100%;
     height: 4%;
     font-size: large;
@@ -30,9 +30,9 @@
 .dayHours {
     font-size: x-large;
     text-align: center;
-    color: rgb(1, 177, 10);
-    background-color: rgb(14, 56, 1);
-    border: 1px solid rgb(178, 255, 127);
+    color: rgb(255, 255, 255);
+    background-color: rgb(3, 4, 40);
+    border: 1px solid rgb(245, 243, 237);
     width: 100%;
     height: 100%;
     justify-content: center;
@@ -42,7 +42,7 @@
 }
 
 .line {
-    background-color: red;
+    background-color: rgb(93, 93, 93);
     width: 100%;
     height: 0.2%;
     top: 4%;
@@ -57,7 +57,7 @@
 
 .task {
     color: black;
-    background-color: darkorange;
+    background-color: rgb(113, 137, 232);
     position: absolute;
     width: 100%;
     height: 4.166666667%;
@@ -75,7 +75,7 @@
     width: 9%;
     height: 6%;
     border-radius: 50%;
-    background-color: rgb(221, 57, 57);
+    background-color: rgb(205, 155, 243);
     align-self: flex-start;
 }
 
@@ -84,7 +84,8 @@
     position: fixed;
     display: inline-block;
     cursor: pointer;
-    background-color: aliceblue;
+    background-color: rgb(0, 0, 0);
+    border: 1px solid rgb(223, 182, 255);
     top: 25%;
     left: 25%;
     width: 50%;
@@ -106,7 +107,8 @@
     position: relative;
     top: 0%;
     border-radius: 50%;
-    background-color: rgb(221, 57, 57);
+    background-color: rgb(26, 0, 55);
+    color: aliceblue;
 }
 
 html,

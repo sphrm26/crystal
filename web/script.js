@@ -3,6 +3,7 @@ var idOfEditTask = 0;
 var password = "QQQ111qqq";
 var user_name = "test";
 var server_host = "http://185.220.227.124:8080";
+// var server_host = "http://localhost:8080";
 
 window.onload = async function () {
   loadUserAndPassFromCookie();

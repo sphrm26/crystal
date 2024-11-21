@@ -13,7 +13,9 @@ type TaskRepo struct {
 }
 
 func NewTaskRepo() *TaskRepo {
-	pool, err := pgxpool.Connect(context.Background(), fmt.Sprintf("postgresql://postgres:z3A70OxmV8@psql-postgresql:5432/crystal"))
+	connectionString := fmt.Sprintf("postgresql://pirate:QQQ111qqq@localhost:5432/crystal")
+	//connectionString := fmt.Sprintf("postgresql://postgres:z3A70OxmV8@psql-postgresql:5432/crystal")
+	pool, err := pgxpool.Connect(context.Background(), connectionString)
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +38,7 @@ select user_id from users
 	return userId
 }
 
-func (taskRepo *TaskRepo) AddTask(title string, startTime time.Time, endTime time.Time, userId int32) error {
+func (taskRepo *TaskRepo) AddTask(title string, startTime time.Time, endTime time.Time, userId int32) (int64, error) {
 	var taskId int64
 	err := taskRepo.postgres.QueryRow(context.Background(), `
 INSERT INTO 
@@ -46,8 +48,7 @@ INSERT INTO
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(taskId)
-	return nil
+	return taskId, nil
 }
 
 func (taskRepo *TaskRepo) EditTask(taskId int64, title string, startTime time.Time, endTime time.Time, userId int32) error {

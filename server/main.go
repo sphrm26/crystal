@@ -27,7 +27,7 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
-		err = taskRepo.AddTask(
+		taskId, err := taskRepo.AddTask(
 			cast.ToString(data["title"]),
 			time.Unix(cast.ToInt64(data["start_time"]), 0),
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
@@ -36,7 +36,7 @@ func main() {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "ok"})
+		c.JSON(http.StatusOK, gin.H{"message": "ok", "task_id": taskId})
 	})
 
 	router.POST("/EditTask", func(c *gin.Context) {

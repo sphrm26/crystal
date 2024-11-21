@@ -13,8 +13,8 @@ type TaskRepo struct {
 }
 
 func NewTaskRepo() *TaskRepo {
-	connectionString := fmt.Sprintf("postgresql://pirate:QQQ111qqq@localhost:5432/crystal")
-	//connectionString := fmt.Sprintf("postgresql://postgres:z3A70OxmV8@psql-postgresql:5432/crystal")
+	//connectionString := fmt.Sprintf("postgresql://pirate:QQQ111qqq@localhost:5432/crystal")
+	connectionString := fmt.Sprintf("postgresql://postgres:z3A70OxmV8@psql-postgresql:5432/crystal")
 	pool, err := pgxpool.Connect(context.Background(), connectionString)
 	if err != nil {
 		panic(err)

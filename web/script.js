@@ -5,7 +5,10 @@ var user_name = "test";
 var server_host = "http://185.220.227.124:8080";
 
 window.onload = async function () {
+  loadUserAndPassFromCookie();
+
   closeEventPupup();
+  closeLoginPupup();
 
   AddHourLinesForDay();
 
@@ -320,4 +323,29 @@ async function goToLastWeek() {
   today.setHours(0, 0, 0, 0);
 
   await getTasksOfCurrentWeek(today);
+}
+
+function openLoginEventPupup(){
+  document.getElementById("loginPopup").style.visibility = "visible";
+}
+
+function closeLoginPupup() {
+  document.getElementById("loginPopup").style.visibility = "hidden";
+}
+
+function login() {
+  user_name = document.getElementById("username").value;
+  password = document.getElementById("password").value;
+
+  text = user_name + "-" + password;
+
+  document.cookie = text;
+  document.getElementById("loginPopup").style.visibility = "hidden";
+}
+
+function loadUserAndPassFromCookie() {
+  var site_cookie = document.cookie;
+  var userPass = site_cookie.split("-");
+  user_name = userPass[0];
+  password = userPass[1];
 }

@@ -51,6 +51,19 @@
 
     <div class="cont">
         <button class="button" onclick="addEventPupup()">+</button>
+        <button class="button" onclick="openLoginEventPupup()">login</button>
+    </div>
+
+    <div class="eventPupup" id="loginPopup">
+        <button class="button" onclick="closeLoginPupup()">x</button>
+        <form class="addEventForm">
+            <label for="username">username</label><br>
+            <input type="text" id="username" name="username"><br>
+
+            <label for="password">password</label><br>
+            <input type="password" id="password" name="password">
+        </form>
+        <button onclick="login()" class="buttonSubmit" id="submitButton">confirm</button>
     </div>
 
     <div class="eventPupup" id="eventPupup">

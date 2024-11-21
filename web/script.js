@@ -1,7 +1,14 @@
 var idOfEditTask = 0;
 
+var password = "QQQ111qqq";
+var user_name = "test";
+var server_host = "http://185.220.227.124:8080";
+
 window.onload = async function () {
+  loadUserAndPassFromCookie();
+
   closeEventPupup();
+  closeLoginPupup();
 
   AddHourLinesForDay();
 
@@ -42,7 +49,7 @@ function addEvent() {
   var duration = document.getElementById("duration").value;
   var priority = document.getElementById("priority").value;
 
-  fetch("http://185.220.227.124:8080/addTask", {
+  fetch(server_host + "/addTask", {
     method: "POST",
     body: JSON.stringify({
       start_time: start_time,
@@ -51,8 +58,8 @@ function addEvent() {
       description: description,
       duration: duration,
       priority: priority,
-      user_name: "test",
-      password: "QQQ111qqq",
+      user_name: user_name,
+      password: password,
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -103,7 +110,7 @@ function EditEvent() {
     priority
   );
 
-  fetch("http://185.220.227.124:8080/EditTask", {
+  fetch(server_host + "/EditTask", {
     method: "POST",
     body: JSON.stringify({
       id: idOfEditTask,
@@ -113,8 +120,8 @@ function EditEvent() {
       description: description,
       duration: duration,
       priority: priority,
-      user_name: "test",
-      password: "QQQ111qqq",
+      user_name: user_name,
+      password: password,
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
@@ -259,13 +266,13 @@ function setDayTitle(diffFromCurentWeek) {
 
 async function getTask(start_time, end_time) {
   try {
-    const response = await fetch("http://185.220.227.124:8080/getTasks", {
+    const response = await fetch(server_host + "/getTasks", {
       method: "POST",
       body: JSON.stringify({
         start_time: start_time,
         end_time: end_time,
-        user_name: "test",
-        password: "QQQ111qqq",
+        user_name: user_name,
+        password: password,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -316,4 +323,29 @@ async function goToLastWeek() {
   today.setHours(0, 0, 0, 0);
 
   await getTasksOfCurrentWeek(today);
+}
+
+function openLoginEventPupup(){
+  document.getElementById("loginPopup").style.visibility = "visible";
+}
+
+function closeLoginPupup() {
+  document.getElementById("loginPopup").style.visibility = "hidden";
+}
+
+function login() {
+  user_name = document.getElementById("username").value;
+  password = document.getElementById("password").value;
+
+  text = user_name + "-" + password;
+
+  document.cookie = text;
+  document.getElementById("loginPopup").style.visibility = "hidden";
+}
+
+function loadUserAndPassFromCookie() {
+  var site_cookie = document.cookie;
+  var userPass = site_cookie.split("-");
+  user_name = userPass[0];
+  password = userPass[1];
 }

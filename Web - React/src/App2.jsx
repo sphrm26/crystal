@@ -32,15 +32,22 @@ const App = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentDate, setCurrentDate] = useState(moment().toDate());
+  const [cachedTasks, setCachedTasks] = useState({});
 
   useEffect(() => {
-    const now = moment();
-    console.log(now.startOf("Month").format("X"));
-    console.log(now.endOf("Month").format("X"));
-    
-    const fetchTasks = async () => {
+    const fetchTasks = async (date) => {
       try {
-        const now = moment();
+        const now = moment(date);
+        const monthKey = now.format("jYYYY-jMM");
+
+        if (cachedTasks[monthKey]) {
+          console.log(`Tasks for ${monthKey} are already cached.`);
+          setEvents(cachedTasks[monthKey]);
+          return;
+        }
+
+        console.log(`Fetching tasks for month: ${monthKey}`);
         const startTime = now.startOf("Month").format("X");
         const endTime = now.endOf("Month").format("X");
 
@@ -67,56 +74,37 @@ const App = () => {
         const formattedEvents = data.tasks.map((task) => {
           const startDate = new Date(task.PlanedTime.StartTime);
           const endDate = new Date(task.PlanedTime.EndTime);
-        
+
           return {
             id: task.ID,
             title: task.Title,
             description: task.Description,
             duration: task.duration,
             priority: task.Priority,
-            start: startDate, 
-            end: endDate, 
+            start: startDate,
+            end: endDate,
           };
         });
-        
+
+        setCachedTasks((prev) => ({
+          ...prev,
+          [monthKey]: formattedEvents,
+        }));
+
         console.log(formattedEvents);
-        
+
         setEvents(formattedEvents);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
 
-    fetchTasks();
-  }, []);
+    fetchTasks(currentDate);
+  }, [currentDate, cachedTasks]);
 
   const toggleOffcanvas = () => {
     setShowOffcanvas(!showOffcanvas);
   };
-
-  //   const handleAddEvent = (newEvent) => {
-  //     const convertedEvent = {
-  //       ...newEvent,
-  //       start: moment(newEvent.start, "jYYYY/jMM/jDD").toDate(), // تبدیل به میلادی
-  //       end: moment(newEvent.end, "jYYYY/jMM/jDD").toDate(), // تبدیل به میلادی
-  //     };
-  //     setEvents([...events, convertedEvent]);
-  //     setShowOffcanvas(false);
-  //   };
-
-  //   const handleEditEvent = (updatedEvent) => {
-  //     const convertedUpdatedEvent = {
-  //       ...updatedEvent,
-  //       start: moment(updatedEvent.start).toDate(), // تبدیل به میلادی
-  //       end: moment(updatedEvent.end).toDate(), // تبدیل به میلادی
-  //     };
-  //     setEvents(
-  //       events.map((event) =>
-  //         event.id === updatedEvent.id ? convertedUpdatedEvent : event
-  //       )
-  //     );
-  //     setShowOffcanvas(false);
-  //   };
 
   const handleAddEvent = (newEvent) => {
     setEvents([...events, newEvent]);
@@ -140,6 +128,11 @@ const App = () => {
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
     setShowOffcanvas(true);
+  };
+
+  const handleNavigate = (newDate) => {
+    console.log("Navigated to:", newDate);
+    setCurrentDate(newDate);
   };
 
   return (
@@ -170,7 +163,8 @@ const App = () => {
         endAccessor="end"
         style={{ height: "85vh" }}
         onSelectEvent={handleSelectEvent}
-        formats={customFormats} // قالب‌بندی شخصی‌سازی شده
+        formats={customFormats}
+        onNavigate={handleNavigate}
         messages={{
           // پیام‌ها را فارسی می‌کنیم
           today: "امروز",

@@ -44,7 +44,7 @@ const Sidebar = ({
     if (selectedEvent) {
       fetch("http://185.220.227.124:8080/EditTask", {
         method: "POST",
-        mode:'no-cors',
+        mode: "no-cors",
         body: JSON.stringify({
           id: selectedEvent.id,
           title: title,
@@ -67,43 +67,42 @@ const Sidebar = ({
           "Content-type": "application/json; charset=UTF-8",
         },
       })
-        .then((response) => response.json() )
+        .then((response) => response.json())
         .then((json) => {
           try {
             console.log(json);
           } catch (error) {
             console.error("Error parsing JSON:", error);
           }
-
-          const updatedEvent = {
-            ...selectedEvent,
-            title,
-            description,
-            priority,
-            duration,
-            start: moment(date)
-              .set({
-                hour: startTime.split(":")[0],
-                minute: startTime.split(":")[1],
-              })
-              .toDate(),
-            end: moment(date)
-              .set({
-                hour: endTime.split(":")[0],
-                minute: endTime.split(":")[1],
-              })
-              .toDate(),
-          };
-          console.log(updatedEvent);
-          onEditEvent(updatedEvent);
         })
         .catch((error) => {
           console.error("Error occurred:", error);
         });
+      const updatedEvent = {
+        ...selectedEvent,
+        title,
+        description,
+        priority,
+        duration,
+        start: moment(date)
+          .set({
+            hour: startTime.split(":")[0],
+            minute: startTime.split(":")[1],
+          })
+          .toDate(),
+        end: moment(date)
+          .set({
+            hour: endTime.split(":")[0],
+            minute: endTime.split(":")[1],
+          })
+          .toDate(),
+      };
+      console.log(updatedEvent);
+      onEditEvent(updatedEvent);
     } else {
       fetch("http://185.220.227.124:8080/addTask", {
         method: "POST",
-        mode:'no-cors',
+        mode: "no-cors",
         body: JSON.stringify({
           start_time: moment(date)
             .set({
@@ -160,12 +159,13 @@ const Sidebar = ({
   // Function to handle date change and disable past dates
   const handleDateChange = (e) => {
     const selectedDate = e.target.value;
-    const today = new Date().toISOString().split("T")[0];
+    setDate(selectedDate);
+    // const today = new Date().toISOString().split("T")[0];
 
-    // Only update date state if selected date is not in the past
-    if (selectedDate >= today) {
-      setDate(selectedDate);
-    }
+    // // Only update date state if selected date is not in the past
+    // if (selectedDate >= today) {
+    //   setDate(selectedDate);
+    // }
   };
 
   const handleDelete = () => {

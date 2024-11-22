@@ -1,32 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment-jalaali";
+import moment from "moment";
+import momentJl from "moment-jalaali";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import Sidebar from "./component/Sidebar.jsx";
+import Sidebar from "./component/sidebar/Sidebar.jsx";
 import "./App.css";
 
-moment.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
-const localizer = momentLocalizer(moment);
+momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
+const localizerJl = momentLocalizer(momentJl);
 
 const customFormats = {
-  dateFormat: (date) => moment(date).format("jD"), // روز ماه (1، 2، ...)
-  dayFormat: (date) => moment(date).format("jD"), // تاریخ روز در ویوهای ماهانه و هفتگی
-  monthHeaderFormat: (date) => moment(date).format("jMMMM jYYYY"), // ماه و سال (مثال: آبان 1403)
+  dateFormat: (date) => momentJl(date).format("jD"), // روز ماه (1، 2، ...)
+  dayFormat: (date) => momentJl(date).format("jD"), // تاریخ روز در ویوهای ماهانه و هفتگی
+  monthHeaderFormat: (date) => momentJl(date).format("jMMMM jYYYY"), // ماه و سال (مثال: آبان 1403)
   weekHeaderFormat: ({ start, end }) =>
-    `${moment(start).format("jD jMMMM")} - ${moment(end).format("jD jMMMM")}`, // بازه زمانی هفته
-  dayHeaderFormat: (date) => moment(date).format("dddd jD jMMMM jYYYY"), // تاریخ کامل روز (مثال: شنبه 26 آبان 1403)
-  agendaDateFormat: (date) => moment(date).format("dddd jD jMMMM"), // تاریخ روز در نمای agenda
-  agendaTimeFormat: (date) => moment(date).format("HH:mm"), // زمان در نمای agenda
+    `${momentJl(start).format("jD jMMMM")} - ${momentJl(end).format(
+      "jD jMMMM"
+    )}`, // بازه زمانی هفته
+  dayHeaderFormat: (date) => momentJl(date).format("dddd jD jMMMM jYYYY"), // تاریخ کامل روز (مثال: شنبه 26 آبان 1403)
+  agendaDateFormat: (date) => momentJl(date).format("dddd jD jMMMM"), // تاریخ روز در نمای agenda
+  agendaTimeFormat: (date) => momentJl(date).format("HH:mm"), // زمان در نمای agenda
   eventTimeRangeFormat: ({ start, end }) =>
-    `${moment(start).format("HH:mm")} - ${moment(end).format("HH:mm")}`, // بازه زمانی رویداد
+    `${momentJl(start).format("HH:mm")} - ${momentJl(end).format("HH:mm")}`, // بازه زمانی رویداد
   dayRangeHeaderFormat: ({ start, end }) =>
-    `${moment(start).format("jD jMMMM")} - ${moment(end).format("jD jMMMM")}`, // بازه زمانی روزها
+    `${momentJl(start).format("jD jMMMM")} - ${momentJl(end).format(
+      "jD jMMMM"
+    )}`, // بازه زمانی روزها
 };
 
 const App = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+
+  useEffect(() => {
+    const now = moment();
+    console.log(now.startOf("Month").format("X"));
+    console.log(now.endOf("Month").format("X"));
+    
+    const fetchTasks = async () => {
+      try {
+        const now = moment();
+        const startTime = now.startOf("Month").format("X");
+        const endTime = now.endOf("Month").format("X");
+
+        const response = await fetch("http://185.220.227.124:8080/getTasks", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify({
+            start_time: startTime,
+            end_time: endTime,
+            user_name: "react",
+            password: "wasd1234",
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.tasks || !Array.isArray(data.tasks)) {
+          console.error("Invalid data format:", data);
+          return [];
+        }
+        console.log(data.tasks);
+
+        const formattedEvents = data.tasks.map((task) => {
+          const startDate = task.PlanedTime.StartTime;
+          const endDate = task.PlanedTime.EndTime;
+
+          return {
+            id: task.ID,
+            title: task.Title,
+            description: task.Description,
+            duration: task.duration,
+            priority: task.Priority,
+            start: startDate,
+            end: endDate,
+          };
+        });
+        console.log(formattedEvents);
+        
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
 
   const toggleOffcanvas = () => {
     setShowOffcanvas(!showOffcanvas);
@@ -102,7 +163,7 @@ const App = () => {
         selectedEvent={selectedEvent}
       />
       <Calendar
-        localizer={localizer}
+        localizer={localizerJl}
         events={events}
         startAccessor="start"
         endAccessor="end"

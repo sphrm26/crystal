@@ -40,14 +40,13 @@ const Sidebar = ({
 
   const handleSubmit = () => {
     console.log(selectedEvent);
-    let id = `${selectedEvent.id}`;
-    console.log(id);
 
     if (selectedEvent) {
       fetch("http://185.220.227.124:8080/EditTask", {
         method: "POST",
+        mode:'no-cors',
         body: JSON.stringify({
-          id: id,
+          id: selectedEvent.id,
           title: title,
           description: description,
           priority: priority,
@@ -57,10 +56,10 @@ const Sidebar = ({
               hour: startTime.split(":")[0],
               minute: startTime.split(":")[1],
             })
-            .format("X"),
+            .unix(),
           end_time: moment(date)
             .set({ hour: endTime.split(":")[0], minute: endTime.split(":")[1] })
-            .format("X"),
+            .unix(),
           user_name: "react",
           password: "wasd1234",
         }),
@@ -68,22 +67,13 @@ const Sidebar = ({
           "Content-type": "application/json; charset=UTF-8",
         },
       })
-        .then((response) => {
-          console.log("Raw Response:", response);
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.text();
-        })
-        .then((text) => {
-          console.log("Raw Text Response:", text);
+        .then((response) => response.json() )
+        .then((json) => {
           try {
-            const json = JSON.parse(text);
             console.log(json);
           } catch (error) {
             console.error("Error parsing JSON:", error);
           }
-          
 
           const updatedEvent = {
             ...selectedEvent,
@@ -113,19 +103,20 @@ const Sidebar = ({
     } else {
       fetch("http://185.220.227.124:8080/addTask", {
         method: "POST",
+        mode:'no-cors',
         body: JSON.stringify({
           start_time: moment(date)
             .set({
               hour: startTime.split(":")[0],
               minute: startTime.split(":")[1],
             })
-            .format("X"),
+            .unix(),
           end_time: moment(date)
             .set({
               hour: endTime.split(":")[0],
               minute: endTime.split(":")[1],
             })
-            .format("X"),
+            .unix(),
           title: title,
           description: description,
           priority: priority,

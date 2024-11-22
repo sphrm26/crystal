@@ -65,19 +65,20 @@ const App = () => {
         console.log(data.tasks);
 
         const formattedEvents = data.tasks.map((task) => {
-          const startDate = task.PlanedTime.StartTime;
-          const endDate = task.PlanedTime.EndTime;
-
+          const startDate = new Date(task.PlanedTime.StartTime);
+          const endDate = new Date(task.PlanedTime.EndTime);
+        
           return {
             id: task.ID,
             title: task.Title,
             description: task.Description,
             duration: task.duration,
             priority: task.Priority,
-            start: startDate,
-            end: endDate,
+            start: startDate, 
+            end: endDate, 
           };
         });
+        
         console.log(formattedEvents);
         
         setEvents(formattedEvents);

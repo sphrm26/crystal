@@ -21,7 +21,9 @@ const App = () => {
   useEffect(() => {
     const fetchTasks = async (date) => {
       try {
-        const now = moment(date);
+        // console.log(data);
+        
+        const now = momentJl(date);
         const monthKey = now.format("jYYYY-jMM");
 
         if (cachedTasks[monthKey]) {
@@ -31,8 +33,9 @@ const App = () => {
         }
 
         console.log(`Fetching tasks for month: ${monthKey}`);
-        const startTime = now.startOf("Month").format("X");
-        const endTime = now.endOf("Month").format("X");
+        const startTime = now.startOf("JMonth").format("X");
+        const endTime = now.endOf("JMonth").format("X");
+
 
         const response = await fetch("http://185.220.227.124:8080/getTasks", {
           method: "POST",

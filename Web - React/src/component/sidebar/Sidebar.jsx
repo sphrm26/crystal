@@ -20,15 +20,8 @@ const Sidebar = ({
   const [duration, setDuration] = useState("");
 
   useEffect(() => {
-    if (selectedDate) {
-      setDate(selectedDate);
-      setStartTime(
-        selectedEvent.start ? moment(selectedEvent.start).format("HH:mm") : ""
-      );
-      setEndTime(
-        selectedEvent.end ? moment(selectedEvent.end).format("HH:mm") : ""
-      );
-    } else if (selectedEvent) {
+    if (selectedEvent) {
+      selectedDate ? setDate(selectedDate) : null;
       setTitle(selectedEvent.title || "");
       setDate(selectedEvent.start || "");
       setStartTime(
@@ -50,7 +43,7 @@ const Sidebar = ({
   const handleSubmit = () => {
     console.log(selectedEvent);
 
-    if (selectedEvent && !selectedDate) {
+    if (selectedEvent?.id) {
       fetch("http://185.220.227.124:8080/EditTask", {
         method: "POST",
         body: JSON.stringify({
@@ -237,9 +230,9 @@ const Sidebar = ({
             onChange={(e) => setEndTime(e.target.value)}
           />
           <button className="btn btn-primary" onClick={handleSubmit}>
-            {selectedEvent && !selectedDate ? "Update" : "Submit"}
+            {selectedEvent?.id ? "Update" : "Submit"}
           </button>
-          {selectedEvent && !selectedDate && (
+          {selectedEvent?.id && (
             <button className="btn btn-danger" onClick={handleDelete}>
               Delete
             </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./Sidebar.css"; // Import your CSS file for styling
+import "./Sidebar.css";
 import moment from "moment";
 
 const Sidebar = ({
@@ -9,6 +9,7 @@ const Sidebar = ({
   onEditEvent,
   onDeleteEvent,
   selectedEvent,
+  selectedDate,
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -19,7 +20,15 @@ const Sidebar = ({
   const [duration, setDuration] = useState("");
 
   useEffect(() => {
-    if (selectedEvent) {
+    if (selectedDate) {
+      setDate(selectedDate);
+      setStartTime(
+        selectedEvent.start ? moment(selectedEvent.start).format("HH:mm") : ""
+      );
+      setEndTime(
+        selectedEvent.end ? moment(selectedEvent.end).format("HH:mm") : ""
+      );
+    } else if (selectedEvent) {
       setTitle(selectedEvent.title || "");
       setDate(selectedEvent.start || "");
       setStartTime(
@@ -36,15 +45,14 @@ const Sidebar = ({
       setDescription("");
       setPriority("");
     }
-  }, [selectedEvent]);
+  }, [selectedEvent, selectedDate]);
 
   const handleSubmit = () => {
     console.log(selectedEvent);
 
-    if (selectedEvent) {
+    if (selectedEvent && !selectedDate) {
       fetch("http://185.220.227.124:8080/EditTask", {
         method: "POST",
-        mode: "no-cors",
         body: JSON.stringify({
           id: selectedEvent.id,
           title: title,
@@ -102,7 +110,6 @@ const Sidebar = ({
     } else {
       fetch("http://185.220.227.124:8080/addTask", {
         method: "POST",
-        mode: "no-cors",
         body: JSON.stringify({
           start_time: moment(date)
             .set({
@@ -230,9 +237,9 @@ const Sidebar = ({
             onChange={(e) => setEndTime(e.target.value)}
           />
           <button className="btn btn-primary" onClick={handleSubmit}>
-            {selectedEvent ? "Update" : "Submit"}
+            {selectedEvent && !selectedDate ? "Update" : "Submit"}
           </button>
-          {selectedEvent && (
+          {selectedEvent && !selectedDate && (
             <button className="btn btn-danger" onClick={handleDelete}>
               Delete
             </button>

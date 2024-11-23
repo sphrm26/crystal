@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { momentLocalizer } from "react-big-calendar";
+import BigCalendar from "jalali-react-big-calendar";
 import moment from "moment";
 import momentJl from "moment-jalaali";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -9,31 +10,13 @@ import "./App.css";
 momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
 const localizerJl = momentLocalizer(momentJl);
 
-const customFormats = {
-  dateFormat: (date) => momentJl(date).format("jD"), // روز ماه (1، 2، ...)
-  dayFormat: (date) => momentJl(date).format("jD"), // تاریخ روز در ویوهای ماهانه و هفتگی
-  monthHeaderFormat: (date) => momentJl(date).format("jMMMM jYYYY"), // ماه و سال (مثال: آبان 1403)
-  weekHeaderFormat: ({ start, end }) =>
-    `${momentJl(start).format("jD jMMMM")} - ${momentJl(end).format(
-      "jD jMMMM"
-    )}`, // بازه زمانی هفته
-  dayHeaderFormat: (date) => momentJl(date).format("dddd jD jMMMM jYYYY"), // تاریخ کامل روز (مثال: شنبه 26 آبان 1403)
-  agendaDateFormat: (date) => momentJl(date).format("dddd jD jMMMM"), // تاریخ روز در نمای agenda
-  agendaTimeFormat: (date) => momentJl(date).format("HH:mm"), // زمان در نمای agenda
-  eventTimeRangeFormat: ({ start, end }) =>
-    `${momentJl(start).format("HH:mm")} - ${momentJl(end).format("HH:mm")}`, // بازه زمانی رویداد
-  dayRangeHeaderFormat: ({ start, end }) =>
-    `${momentJl(start).format("jD jMMMM")} - ${momentJl(end).format(
-      "jD jMMMM"
-    )}`, // بازه زمانی روزها
-};
-
 const App = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(moment().toDate());
   const [cachedTasks, setCachedTasks] = useState({});
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     const fetchTasks = async (date) => {
@@ -130,6 +113,17 @@ const App = () => {
     setShowOffcanvas(true);
   };
 
+  const handleSelectSlot = (slotInfo) => {
+    setSelectedEvent(null);
+    setSelectedDate(slotInfo.start);
+    setShowOffcanvas(true);
+    const defaultEvent = {
+      start: slotInfo.start,
+      end: slotInfo.end,
+    };
+    setSelectedEvent(defaultEvent);
+  };
+
   const handleNavigate = (newDate) => {
     console.log("Navigated to:", newDate);
     setCurrentDate(newDate);
@@ -155,18 +149,19 @@ const App = () => {
         onEditEvent={handleEditEvent}
         onDeleteEvent={handleDeleteEvent}
         selectedEvent={selectedEvent}
+        selectedDate={selectedDate}
       />
-      <Calendar
-        localizer={localizerJl}
+      <BigCalendar
         events={events}
+        localizer={localizerJl}
         startAccessor="start"
         endAccessor="end"
         style={{ height: "85vh" }}
         onSelectEvent={handleSelectEvent}
-        formats={customFormats}
         onNavigate={handleNavigate}
+        onSelectSlot={handleSelectSlot}
+        selectable
         messages={{
-          // پیام‌ها را فارسی می‌کنیم
           today: "امروز",
           previous: "قبلی",
           next: "بعدی",

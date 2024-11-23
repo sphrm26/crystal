@@ -6,18 +6,23 @@ A modern scheduling application built using React and Vite, featuring an interac
 
 ## 🚀 Getting Started
 
-### 1. Install Dependencies
+### 1. Install yarn
+
+```bash
+npm install --global yarn
+```
+### 2. Install Dependencies
 To set up the project locally, start by installing the required dependencies. Run the following command in your project directory:
 
 ```bash
-npm install
+yarn install
 ```
 
-### 2. Run the Application
+### 3. Run the Application
 Launch the app in development mode using the command:
 
 ```bash
-npm run dev
+yarn run dev
 ```
 
 Then open your browser and navigate to [http://localhost:5173](http://localhost:5173) to see the app in action.  
@@ -30,8 +35,10 @@ Then open your browser and navigate to [http://localhost:5173](http://localhost:
 
 This project utilizes the following tools and libraries to enhance functionality and streamline development:
 
-1. **[react-big-calendar](https://github.com/jquense/react-big-calendar)** (`v1.15.0`): A powerful and customizable calendar component for React.  
-2. **[moment.js](https://momentjs.com/)** (`v2.30.1`): A library for parsing, validating, and formatting dates and times.  
+1. **[react-big-calendar](https://github.com/jquense/react-big-calendar)** (`v1.15.0`): A powerful and customizable calendar component for React.
+2. **[jalali-react-big-calendar](https://github.com/fingerpich/jalali-react-big-calendar)** (`v0.19.5`):
+
+3. **[moment.js](https://momentjs.com/)** (`v2.30.1`): A library for parsing, validating, and formatting dates and times.  
 
 Built on **Vite**, a lightning-fast build tool and development server for modern web projects.
 

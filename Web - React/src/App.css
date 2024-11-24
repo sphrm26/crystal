@@ -13,12 +13,10 @@
   padding: 20px;
   text-align: center;
 }
+
 .time{
   font-size: 50px;
 }
-/* .btn-container {
-  margin-top: 20px;
-} */
 
 button {
   margin: 0 5px;
@@ -38,7 +36,7 @@ button:hover {
 /* --------------------------------- */
 
 .calender-container{
-  padding: 20px;
+  padding: 18px;
 }
 
 .btn-events{
@@ -49,14 +47,40 @@ button:hover {
   color: white;
 }
 
-.btn-container{
-  margin-bottom: 10px;
-}
 
 .rbc-calendar {
   direction: rtl;
   text-align: right;
 }
-.rbc-toolbar button {
-  direction: rtl;
+
+/* ------------------------ */
+
+.btn-container {
+  margin-bottom: 15px;
+}
+
+
+.rbc-event{
+  text-align: center;
+}
+
+.rbc-event:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 510px) {
+  .calender-container {
+    padding: 5px;
+  }
+
+  .rbc-event{
+    font-size: 8px;
+    width: 100%;
+    padding: 0;
+    height: 100%;
+  }
+
+  .rbc-month-view {
+    font-size: 58%;
+  }
 }

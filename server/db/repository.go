@@ -52,15 +52,18 @@ INSERT INTO
 }
 
 func (taskRepo *TaskRepo) EditTask(taskId int64, title string, startTime time.Time, endTime time.Time, userId int32) error {
-	err := taskRepo.postgres.QueryRow(context.Background(), `
+	taskRepo.postgres.QueryRow(context.Background(), `
 	update tasks 
 	set title = $2, start_time = $3, end_time = $4, user_id = $5
 	where id = $1;
 `, taskId, title, startTime, endTime, userId)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(taskId)
+	return nil
+}
+
+func (taskRepo *TaskRepo) DeleteTask(taskId int64, userId int32) error {
+	taskRepo.postgres.QueryRow(context.Background(), `
+	delete from tasks where id = $1 and user_id = $2	
+	`, taskId, userId)
 	return nil
 }
 

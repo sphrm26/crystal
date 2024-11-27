@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
-import "./Sidebar.css";
+import "./Sidebar.css"; // Import your CSS file for styling
 import moment from "moment";
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 const Sidebar = ({
   show,
@@ -61,8 +67,8 @@ const Sidebar = ({
           end_time: moment(date)
             .set({ hour: endTime.split(":")[0], minute: endTime.split(":")[1] })
             .unix(),
-          user_name: "react",
-          password: "wasd1234",
+          user_name: getCookie("username"),
+          password: getCookie("password"),
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -120,8 +126,8 @@ const Sidebar = ({
           description: description,
           priority: priority,
           duration: duration,
-          user_name: "react",
-          password: "wasd1234",
+          user_name: getCookie("username"),
+          password: getCookie("password"),
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -170,7 +176,22 @@ const Sidebar = ({
 
   const handleDelete = () => {
     if (selectedEvent) {
-      onDeleteEvent(selectedEvent.id);
+      fetch("http://185.220.227.124:8080/deleteTask", {
+        method: "POST",
+        body: JSON.stringify({
+          id: selectedEvent.id,
+          user_name: getCookie("username"),
+          password: getCookie("password"),
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          onDeleteEvent(selectedEvent.id);
+        });
     }
   };
 

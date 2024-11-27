@@ -62,6 +62,26 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	})
 
+	router.POST("/deleteTask", func(c *gin.Context) {
+		data, err := GetData(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
+
+		err = taskRepo.DeleteTask(
+			cast.ToInt64(data["id"]),
+			userId,
+		)
+		if err != nil {
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "ok"})
+	})
+
 	router.POST("/getTasks", func(c *gin.Context) {
 		data, err := GetData(c)
 		if err != nil {

@@ -5,7 +5,14 @@ import moment from "moment";
 import momentJl from "moment-jalaali";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Sidebar from "./component/sidebar/Sidebar.jsx";
+import Login from "./component/login/Login.jsx";
 import "./App.css";
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
 const localizerJl = momentLocalizer(momentJl);
@@ -45,8 +52,8 @@ const App = () => {
           body: JSON.stringify({
             start_time: startTime,
             end_time: endTime,
-            user_name: "react",
-            password: "wasd1234",
+            user_name: getCookie("username"),
+            password: getCookie("password"),
           }),
         });
 
@@ -144,6 +151,7 @@ const App = () => {
         >
           Add Event
         </button>
+        <Login/>
       </div>
       <Sidebar
         show={showOffcanvas}

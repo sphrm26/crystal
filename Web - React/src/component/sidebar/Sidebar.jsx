@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Sidebar.css"; // Import your CSS file for styling
 import moment from "moment";
-
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
+import { getCookie } from "../login/Login.jsx"
 
 const Sidebar = ({
   show,

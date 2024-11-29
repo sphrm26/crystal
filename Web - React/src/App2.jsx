@@ -93,7 +93,6 @@ const App = () => {
   const toggleOffcanvas = () => {
     setShowOffcanvas(!showOffcanvas);
   };
-  alert(1)
 
   const handleAddEvent = (newEvent) => {
     setEvents([...events, newEvent]);

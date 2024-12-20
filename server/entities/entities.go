@@ -1,4 +1,4 @@
-package task
+package entities
 
 import (
 	"fmt"
@@ -18,14 +18,14 @@ type Task struct {
 	Title       string
 	Description string
 	Priority    uint8
-	Group       Group
+	GroupId     int64
 	ID          int64
 	IsDone      bool
 }
 
 type Group struct {
-	Name  string
-	Color string
+	Id   int64
+	Name string
 }
 
 type Manager struct {

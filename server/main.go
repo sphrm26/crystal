@@ -27,11 +27,15 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
+		groupId, err := taskRepo.GetGroupIdByName(cast.ToString(data["group_name"]), userId)
+
 		taskId, err := taskRepo.AddTask(
 			cast.ToString(data["title"]),
 			time.Unix(cast.ToInt64(data["start_time"]), 0),
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
-			userId)
+			userId,
+			groupId,
+		)
 		if err != nil {
 			return
 		}
@@ -48,12 +52,15 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
+		groupId, err := taskRepo.GetGroupIdByName(cast.ToString(data["group_name"]), userId)
+
 		err = taskRepo.EditTask(
 			cast.ToInt64(data["id"]),
 			cast.ToString(data["title"]),
 			time.Unix(cast.ToInt64(data["start_time"]), 0),
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
 			userId,
+			groupId,
 		)
 		if err != nil {
 			return
@@ -98,6 +105,43 @@ func main() {
 		)
 
 		c.JSON(http.StatusOK, gin.H{"tasks": tasks})
+	})
+
+	router.POST("/addGroup", func(c *gin.Context) {
+		data, err := GetData(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
+
+		groupId, err := taskRepo.AddGroup(
+			cast.ToString(data["group_name"]),
+			userId,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "ok", "group_id": groupId})
+	})
+
+	router.POST("/getGroups", func(c *gin.Context) {
+		data, err := GetData(c)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
+
+		groups, err := taskRepo.GetGroupsByUserId(
+			userId,
+		)
+
+		c.JSON(http.StatusOK, gin.H{"groups": groups})
 	})
 
 	err := router.Run("0.0.0.0:8080")

@@ -5,7 +5,9 @@ import moment from "moment";
 import momentJl from "moment-jalaali";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Sidebar from "./component/sidebar/Sidebar.jsx";
+import Login from "./component/login/Login.jsx";
 import "./App.css";
+import { getCookie } from "./component/login/Login.jsx";
 
 momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
 const localizerJl = momentLocalizer(momentJl);
@@ -17,12 +19,13 @@ const App = () => {
   const [currentDate, setCurrentDate] = useState(moment().toDate());
   const [cachedTasks, setCachedTasks] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
+  const [currentView, setCurrentView] = useState("month");
 
   useEffect(() => {
     const fetchTasks = async (date) => {
       try {
         // console.log(data);
-        
+
         const now = momentJl(date);
         const monthKey = now.format("jYYYY-jMM");
 
@@ -36,7 +39,6 @@ const App = () => {
         const startTime = now.startOf("JMonth").format("X");
         const endTime = now.endOf("JMonth").format("X");
 
-
         const response = await fetch("http://185.220.227.124:8080/getTasks", {
           method: "POST",
           headers: {
@@ -45,8 +47,8 @@ const App = () => {
           body: JSON.stringify({
             start_time: startTime,
             end_time: endTime,
-            user_name: "react",
-            password: "wasd1234",
+            user_name: getCookie("username"),
+            password: getCookie("password"),
           }),
         });
 
@@ -132,6 +134,15 @@ const App = () => {
     setCurrentDate(newDate);
   };
 
+  const getAgendaRange = () => {
+    const startOfMonth = momentJl(currentDate).startOf("jMonth").toDate();
+    const endOfMonth = momentJl(currentDate).endOf("jMonth").toDate();
+    return [startOfMonth, endOfMonth];
+  };
+
+  const dateToShow =
+    currentView === "agenda" ? getAgendaRange()[0] : currentDate;
+
   return (
     <div className="calender-container">
       <div className="btn-container">
@@ -144,6 +155,7 @@ const App = () => {
         >
           Add Event
         </button>
+        <Login />
       </div>
       <Sidebar
         show={showOffcanvas}
@@ -164,6 +176,11 @@ const App = () => {
         onNavigate={handleNavigate}
         onSelectSlot={handleSelectSlot}
         selectable
+        date={dateToShow}
+        onView={(view) => {
+          console.log("View changed to:", view);
+          setCurrentView(view);
+        }}
         messages={{
           today: "امروز",
           previous: "قبلی",

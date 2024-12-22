@@ -111,7 +111,7 @@ func (taskRepo *TaskRepo) AddGroup(groupName string, userId int32) (int64, error
 	var groupId int64
 	err := taskRepo.postgres.QueryRow(context.Background(), `
 INSERT INTO 
-    groups (group_name, user_id)1
+    groups (group_name, user_id)
 	VALUES ($1, $2) RETURNING id
 `, groupName, userId).Scan(&groupId)
 	if err != nil {
@@ -123,7 +123,7 @@ INSERT INTO
 func (taskRepo *TaskRepo) GetGroupIdByName(groupName string, userId int32) (int64, error) {
 	var groupId int64
 	err := taskRepo.postgres.QueryRow(context.Background(), `
-SELECT group_id from
+SELECT id from
     groups where user_id = $1 and group_name = $2 limit 1
 `, userId, groupName).Scan(&groupId)
 	if err != nil {
@@ -144,12 +144,12 @@ func (taskRepo *TaskRepo) GetGroupsByUserId(userId int32) ([]entities.Group, err
 
 	groups := make([]entities.Group, 0)
 	for resRaw.Next() {
-		var name string
 		var id int64
+		var name string
 
-		err := resRaw.Scan(&name, &id)
+		err := resRaw.Scan(&id, &name)
 		if err != nil {
-			return nil, err
+			panic(err)
 		}
 		groups = append(groups, entities.Group{
 			Name: name,

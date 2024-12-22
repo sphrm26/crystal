@@ -1,35 +1,62 @@
-.login {
-    background-color: rgb(58, 1, 63);
-    color: burlywood;
+.task-board {
     display: flex;
-    flex-direction: row;
+    gap: 16px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow-x: auto;
 }
 
-.login-password {
-    background-color: rgb(231, 231, 231);
-    size-adjust: inherit;
-    height: 60%;
-    width: 90%;
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 5%;
-    margin: 0;
-    padding: 0;
-}
-
-.login-name {
-    background-color: rgb(231, 231, 231);
-    size-adjust: inherit;
-    height: 90%;
-    width: 90%;
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 5%;
-    margin: 0;
-    padding: 0;
-}
-
-.login-label {
+.task-column {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 0 0 300px;
     display: flex;
     flex-direction: column;
-    width: 50%;
-    size-adjust: inherit;
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.column-title {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px 8px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.task-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.task {
+    background-color: #f4f4f4;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.task-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333333;
+}
+
+.task-desc {
+    font-size: 14px;
+    color: #666666;
 }

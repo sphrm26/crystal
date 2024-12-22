@@ -14,6 +14,7 @@ const Sidebar = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [group, setGroup] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -53,6 +54,7 @@ const Sidebar = ({
           description: description,
           priority: priority,
           duration: duration,
+          group_name: group,
           start_time: moment(date)
             .set({
               hour: startTime.split(":")[0],
@@ -121,6 +123,7 @@ const Sidebar = ({
           description: description,
           priority: priority,
           duration: duration,
+          group_name: group,
           user_name: getCookie("username"),
           password: getCookie("password"),
         }),
@@ -213,6 +216,13 @@ const Sidebar = ({
             placeholder="Event description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+          <label>group</label>
+          <input
+            type="text"
+            placeholder="group"
+            value={group}
+            onChange={(e) => setGroup(e.target.value)}
           />
           <label>priority</label>
           <input

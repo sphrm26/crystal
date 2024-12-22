@@ -6,6 +6,7 @@ import momentJl from "moment-jalaali";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import Sidebar from "./component/sidebar/Sidebar.jsx";
 import Login from "./component/login/Login.jsx";
+import Tasks from "./component/tasks/Tasks.jsx";
 import "./App.css";
 import { getCookie } from "./component/login/Login.jsx"
 
@@ -19,6 +20,7 @@ const App = () => {
   const [currentDate, setCurrentDate] = useState(moment().toDate());
   const [cachedTasks, setCachedTasks] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
+  const [pageType, setTypeOfPage] = useState(null);
 
   useEffect(() => {
     const fetchTasks = async (date) => {
@@ -134,6 +136,45 @@ const App = () => {
     setCurrentDate(newDate);
   };
 
+  if (pageType == "tasks"){
+    return (
+      <div className="calender-container">
+        <div className="btn-container">
+          <button
+            className="btn-event"
+            onClick={() => {
+              setSelectedEvent(null);
+              toggleOffcanvas();
+            }}
+          >
+            Add Event
+          </button>
+          <Login />
+          <button
+            className="btn-event"
+            onClick={() => {
+              setTypeOfPage("calender");
+            }}
+          >
+            calender
+          </button>
+        </div>
+        <Sidebar
+          show={showOffcanvas}
+          onHide={() => setShowOffcanvas(false)}
+          onAddEvent={handleAddEvent}
+          onEditEvent={handleEditEvent}
+          onDeleteEvent={handleDeleteEvent}
+          selectedEvent={selectedEvent}
+          selectedDate={selectedDate}
+        />
+        <Tasks>
+          
+        </Tasks>
+      </div>
+    );
+  }
+
   return (
     <div className="calender-container">
       <div className="btn-container">
@@ -146,7 +187,15 @@ const App = () => {
         >
           Add Event
         </button>
-        <Login/>
+        <Login />
+        <button
+          className="btn-event"
+          onClick={() => {
+            setTypeOfPage("tasks");
+          }}
+        >
+          tasks
+        </button>
       </div>
       <Sidebar
         show={showOffcanvas}

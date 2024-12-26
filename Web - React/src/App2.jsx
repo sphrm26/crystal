@@ -9,6 +9,7 @@ import Login from "./component/login/Login.jsx";
 import Tasks from "./component/tasks/Tasks.jsx";
 import "./App.css";
 import { getCookie } from "./component/login/Login.jsx"
+import FetchCategories from "./apis/getCategories.jsx";
 
 momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
 const localizerJl = momentLocalizer(momentJl);
@@ -21,6 +22,7 @@ const App = () => {
   const [cachedTasks, setCachedTasks] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
   const [pageType, setTypeOfPage] = useState(null);
+  const [cachedCategories, setCachedCategories] = useState([]);
 
   useEffect(() => {
     const fetchTasks = async (date) => {
@@ -61,9 +63,21 @@ const App = () => {
         }
         console.log(data.tasks);
 
+        let categories = [];
+        if (cachedCategories.length == 0) {
+          categories = await FetchCategories()
+          setCachedCategories(categories)
+        }
+
         const formattedEvents = data.tasks.map((task) => {
           const startDate = new Date(task.PlanedTime.StartTime);
           const endDate = new Date(task.PlanedTime.EndTime);
+
+          categories.map((cat) => {
+            if (cat.Id == task.CategoryId) {
+              task.categoryName = cat.Name
+            }
+          })
 
           return {
             id: task.ID,
@@ -73,6 +87,7 @@ const App = () => {
             priority: task.Priority,
             start: startDate,
             end: endDate,
+            category: task.categoryName,
           };
         });
 

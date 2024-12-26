@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Tasks.css"
 import { getCookie } from "../login/Login.jsx"
+import FetchCategories from "../../apis/getCategories.jsx";
+import FetchTasks from "../../apis/getTasks.jsx";
 
 const Tasks = ({
     onSelectEvent,
@@ -38,64 +40,19 @@ const Tasks = ({
 
     useEffect(() => {
         const fetchTasks = async () => {
-
             if (cachedTasks.length != 0) {
                 return
             }
-
-            try {
-                const response = await fetch("http://185.220.227.124:8080/getTasks", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json; charset=UTF-8",
-                    },
-                    body: JSON.stringify({
-                        start_time: 0,
-                        end_time: 1797716608,
-                        user_name: getCookie("username"),
-                        password: getCookie("password"),
-                    }),
-                });
-                const data = await response.json();
-                if (!data.tasks || !Array.isArray(data.tasks)) {
-                    console.error("Invalid data format:", data);
-                    return [];
-                }
-
-                setCachedTasks(data.tasks)
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-            }
+            const response = await FetchTasks();
+            setCachedTasks(response)
         };
 
         const fetchCategories = async () => {
-
             if (cachedCategories.length != 0) {
                 return
             }
-
-            try {
-                const response = await fetch("http://185.220.227.124:8080/getCategories", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json; charset=UTF-8",
-                    },
-                    body: JSON.stringify({
-                        user_name: getCookie("username"),
-                        password: getCookie("password"),
-                    }),
-                });
-                const data = await response.json();
-
-                data.categories.push({
-                    Id: 0,
-                    Name: "بدون گروه"
-                })
-
-                setCachedCategories(data.categories)
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-            }
+            const response = await FetchCategories()
+            setCachedCategories(response)
         };
 
         fetchTasks();
@@ -112,7 +69,6 @@ const Tasks = ({
             category: Category.Name
         })
     };
-
 
     const categoryTasks = cachedCategories.reduce((acc, category) => {
         acc[category.Id] = {

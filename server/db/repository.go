@@ -38,25 +38,25 @@ select user_id from users
 	return userId
 }
 
-func (taskRepo *TaskRepo) AddTask(title string, startTime time.Time, endTime time.Time, userId int32, categoryId int64) (int64, error) {
+func (taskRepo *TaskRepo) AddTask(title string, startTime time.Time, endTime time.Time, userId int32, categoryId int64, duration int32, isDone bool) (int64, error) {
 	var taskId int64
 	err := taskRepo.postgres.QueryRow(context.Background(), `
 INSERT INTO 
-    tasks (title, start_time, end_time, user_id, category_id)
-	VALUES ($1, $2, $3, $4, $5) RETURNING id
-`, title, startTime, endTime, userId, categoryId).Scan(&taskId)
+    tasks (title, start_time, end_time, user_id, category_id, duration, is_done)
+	VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id
+`, title, startTime, endTime, userId, categoryId, duration, isDone).Scan(&taskId)
 	if err != nil {
 		panic(err)
 	}
 	return taskId, nil
 }
 
-func (taskRepo *TaskRepo) EditTask(taskId int64, title string, startTime time.Time, endTime time.Time, userId int32, categoryId int64) error {
+func (taskRepo *TaskRepo) EditTask(taskId int64, title string, startTime time.Time, endTime time.Time, userId int32, categoryId int64, duration int32, isDone bool) error {
 	taskRepo.postgres.QueryRow(context.Background(), `
 	update tasks 
-	set title = $2, start_time = $3, end_time = $4, user_id = $5, category_id = $6
+	set title = $2, start_time = $3, end_time = $4, user_id = $5, category_id = $6, duration = $7, is_done = $8
 	where id = $1;
-`, taskId, title, startTime, endTime, userId, categoryId)
+`, taskId, title, startTime, endTime, userId, categoryId, duration, isDone)
 	return nil
 }
 
@@ -69,7 +69,7 @@ func (taskRepo *TaskRepo) DeleteTask(taskId int64, userId int32) error {
 
 func (taskRepo *TaskRepo) GetTasksByDate(startDate time.Time, endDate time.Time, userId int32) []entities.Task {
 	resRaw, err := taskRepo.postgres.Query(context.Background(), `
-	select id, title, start_time, end_time, user_id, category_id from public.tasks
+	select id, title, start_time, end_time, user_id, category_id, duration, is_done from public.tasks
 		where 
 		    user_id = $1
 			and start_time >= $2
@@ -88,8 +88,10 @@ func (taskRepo *TaskRepo) GetTasksByDate(startDate time.Time, endDate time.Time,
 		var endTime time.Time
 		var userId int32
 		var categoryId int64
+		var duration int32
+		var isDone bool
 
-		err := resRaw.Scan(&id, &title, &startTime, &endTime, &userId, &categoryId)
+		err := resRaw.Scan(&id, &title, &startTime, &endTime, &userId, &categoryId, &duration, &isDone)
 		if err != nil {
 			return nil
 		}
@@ -101,6 +103,8 @@ func (taskRepo *TaskRepo) GetTasksByDate(startDate time.Time, endDate time.Time,
 			Title:      title,
 			ID:         id,
 			CategoryId: categoryId,
+			Duration:   duration,
+			IsDone:     isDone,
 		})
 	}
 

@@ -34,6 +34,14 @@ const Sidebar = ({
         selectedEvent.end ? moment(selectedEvent.end).format("HH:mm") : ""
       );
       setCategory(selectedEvent.category)
+
+      const hours = Math.floor(selectedEvent.duration / 60);
+      const mins = selectedEvent.duration % 60;
+      var strDur = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+      setDuration(strDur)
+      if (selectedEvent.duration == 0){
+        setDuration("")
+      }
     } else {
       setTitle("");
       setDate("");
@@ -42,6 +50,7 @@ const Sidebar = ({
       setDescription("");
       setPriority("");
       setCategory("بدون گروه");
+      setDuration("")
     }
 
     fetchCategories();
@@ -91,7 +100,7 @@ const Sidebar = ({
           title: title,
           description: description,
           priority: priority,
-          duration: duration,
+          duration: Number(duration.split(':')[0]) * 60 + Number(duration.split(':')[1]),
           category_name: category,
           start_time: moment(date)
             .set({
@@ -160,7 +169,7 @@ const Sidebar = ({
           title: title,
           description: description,
           priority: priority,
-          duration: duration,
+          duration: Number(duration.split(':')[0]) * 60 + Number(duration.split(':')[1]),
           category_name: category,
           user_name: getCookie("username"),
           password: getCookie("password"),

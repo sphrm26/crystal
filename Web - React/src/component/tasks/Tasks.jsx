@@ -43,7 +43,7 @@ const Tasks = ({
             if (cachedTasks.length != 0) {
                 return
             }
-            const response = await FetchTasks();
+            const response = await FetchTasks(0, 1797716608);
             setCachedTasks(response)
         };
 

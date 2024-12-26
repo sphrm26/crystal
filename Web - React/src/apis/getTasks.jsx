@@ -1,6 +1,6 @@
 import { getCookie } from "../component/login/Login.jsx"
 
-export default async function FetchTasks() {
+export default async function FetchTasks(startTime, endTime) {
     const fetchTasks = async () => {
         try {
             const response = await fetch("http://185.220.227.124:8080/getTasks", {
@@ -9,8 +9,8 @@ export default async function FetchTasks() {
                     "Content-Type": "application/json; charset=UTF-8",
                 },
                 body: JSON.stringify({
-                    start_time: 0,
-                    end_time: 1797716608,
+                    start_time: startTime,
+                    end_time: endTime,
                     user_name: getCookie("username"),
                     password: getCookie("password"),
                 }),

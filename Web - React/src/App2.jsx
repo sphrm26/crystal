@@ -10,6 +10,7 @@ import Tasks from "./component/tasks/Tasks.jsx";
 import "./App.css";
 import { getCookie } from "./component/login/Login.jsx"
 import FetchCategories from "./apis/getCategories.jsx";
+import FetchTasks from "./apis/getTasks.jsx";
 
 momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
 const localizerJl = momentLocalizer(momentJl);
@@ -42,26 +43,7 @@ const App = () => {
         const startTime = now.startOf("JMonth").format("X");
         const endTime = now.endOf("JMonth").format("X");
 
-
-        const response = await fetch("http://185.220.227.124:8080/getTasks", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json; charset=UTF-8",
-          },
-          body: JSON.stringify({
-            start_time: startTime,
-            end_time: endTime,
-            user_name: getCookie("username"),
-            password: getCookie("password"),
-          }),
-        });
-
-        const data = await response.json();
-        if (!data.tasks || !Array.isArray(data.tasks)) {
-          console.error("Invalid data format:", data);
-          return [];
-        }
-        console.log(data.tasks);
+        const tasks = await FetchTasks(startTime, endTime)
 
         let categories = [];
         if (cachedCategories.length == 0) {
@@ -69,7 +51,7 @@ const App = () => {
           setCachedCategories(categories)
         }
 
-        const formattedEvents = data.tasks.map((task) => {
+        const formattedEvents = tasks.map((task) => {
           const startDate = new Date(task.PlanedTime.StartTime);
           const endDate = new Date(task.PlanedTime.EndTime);
 
@@ -83,7 +65,7 @@ const App = () => {
             id: task.ID,
             title: task.Title,
             description: task.Description,
-            duration: task.duration,
+            duration: task.Duration,
             priority: task.Priority,
             start: startDate,
             end: endDate,
@@ -184,7 +166,7 @@ const App = () => {
           selectedDate={selectedDate}
         />
         <Tasks
-        onSelectEvent={handleSelectEvent}
+          onSelectEvent={handleSelectEvent}
         >
         </Tasks>
       </div>

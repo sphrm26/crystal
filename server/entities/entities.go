@@ -6,7 +6,6 @@ import (
 )
 
 type PlanedTime struct {
-	EstimatedTime time.Duration
 	StartTime     time.Time
 	EndTime       time.Time
 	DoneStartTime time.Time
@@ -15,6 +14,7 @@ type PlanedTime struct {
 
 type Task struct {
 	PlanedTime  *PlanedTime
+	Duration    int32
 	Title       string
 	Description string
 	Priority    uint8

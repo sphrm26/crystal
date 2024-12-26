@@ -35,6 +35,8 @@ func main() {
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
 			userId,
 			categoryId,
+			cast.ToInt32(data["duration"]),
+			cast.ToBool(data["is_done"]),
 		)
 		if err != nil {
 			return
@@ -61,6 +63,8 @@ func main() {
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
 			userId,
 			categoryId,
+			cast.ToInt32(data["duration"]),
+			cast.ToBool(data["is_done"]),
 		)
 		if err != nil {
 			return

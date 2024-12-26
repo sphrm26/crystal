@@ -62,6 +62,16 @@ input[type='time'] {
   margin-left: 8px;
 }
 
+select {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 4px;
+  margin-left: 8px;
+}
+
 button {
   margin-top: 15px;
 }
@@ -80,4 +90,23 @@ button {
   cursor: pointer;
   color:white;
   margin-left: 10px;
+}
+
+select.form-control {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 4px;
+  margin-left: 8px;
+  background-color: white;
+  appearance: none; /* برای حذف استایل پیش‌فرض مرورگر */
+  cursor: pointer;
+}
+
+select.form-control:focus {
+  outline: none;
+  border-color: #007bff; /* رنگ آبی برای تمرکز */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }

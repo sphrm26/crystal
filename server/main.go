@@ -27,14 +27,14 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
-		groupId, err := taskRepo.GetGroupIdByName(cast.ToString(data["group_name"]), userId)
+		categoryId, err := taskRepo.GetCategoryIdByName(cast.ToString(data["category_name"]), userId)
 
 		taskId, err := taskRepo.AddTask(
 			cast.ToString(data["title"]),
 			time.Unix(cast.ToInt64(data["start_time"]), 0),
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
 			userId,
-			groupId,
+			categoryId,
 		)
 		if err != nil {
 			return
@@ -52,7 +52,7 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
-		groupId, err := taskRepo.GetGroupIdByName(cast.ToString(data["group_name"]), userId)
+		categoryId, err := taskRepo.GetCategoryIdByName(cast.ToString(data["category_name"]), userId)
 
 		err = taskRepo.EditTask(
 			cast.ToInt64(data["id"]),
@@ -60,7 +60,7 @@ func main() {
 			time.Unix(cast.ToInt64(data["start_time"]), 0),
 			time.Unix(cast.ToInt64(data["end_time"]), 0),
 			userId,
-			groupId,
+			categoryId,
 		)
 		if err != nil {
 			return
@@ -107,7 +107,7 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"tasks": tasks})
 	})
 
-	router.POST("/addGroup", func(c *gin.Context) {
+	router.POST("/addCategory", func(c *gin.Context) {
 		data, err := GetData(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -116,8 +116,8 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
-		groupId, err := taskRepo.AddGroup(
-			cast.ToString(data["group_name"]),
+		categoryId, err := taskRepo.AddCategory(
+			cast.ToString(data["category_name"]),
 			userId,
 		)
 		if err != nil {
@@ -125,10 +125,10 @@ func main() {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "ok", "group_id": groupId})
+		c.JSON(http.StatusOK, gin.H{"message": "ok", "category_id": categoryId})
 	})
 
-	router.POST("/getGroups", func(c *gin.Context) {
+	router.POST("/getCategories", func(c *gin.Context) {
 		data, err := GetData(c)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -137,11 +137,11 @@ func main() {
 
 		userId := taskRepo.FindUser(cast.ToString(data["user_name"]), cast.ToString(data["password"]))
 
-		groups, err := taskRepo.GetGroupsByUserId(
+		categories, err := taskRepo.GetCategoriesByUserId(
 			userId,
 		)
 
-		c.JSON(http.StatusOK, gin.H{"groups": groups})
+		c.JSON(http.StatusOK, gin.H{"categories": categories})
 	})
 
 	err := router.Run("0.0.0.0:8080")

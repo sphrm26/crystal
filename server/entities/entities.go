@@ -18,26 +18,26 @@ type Task struct {
 	Title       string
 	Description string
 	Priority    uint8
-	GroupId     int64
+	CategoryId  int64
 	ID          int64
 	IsDone      bool
 }
 
-type Group struct {
+type Category struct {
 	Id   int64
 	Name string
 }
 
 type Manager struct {
 	Tasks          map[int64]*Task
-	Groups         map[int]*Group
+	Groups         map[int]*Category
 	TaskIdSequence int64
 }
 
 func NewTaskManager() Manager {
 	return Manager{
 		Tasks:          make(map[int64]*Task),
-		Groups:         make(map[int]*Group),
+		Groups:         make(map[int]*Category),
 		TaskIdSequence: 1,
 	}
 }

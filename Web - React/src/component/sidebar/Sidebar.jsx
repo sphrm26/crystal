@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import "./Sidebar.css";
+import "./Sidebar.css"; // Import your CSS file for styling
 import moment from "moment";
+import { getCookie } from "../login/Login.jsx"
 
 const Sidebar = ({
   show,
@@ -13,11 +14,13 @@ const Sidebar = ({
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [priority, setPriority] = useState("");
   const [duration, setDuration] = useState("");
+  const [cachedCategories, setCachedCategories] = useState([]);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -30,6 +33,15 @@ const Sidebar = ({
       setEndTime(
         selectedEvent.end ? moment(selectedEvent.end).format("HH:mm") : ""
       );
+      setCategory(selectedEvent.category)
+
+      const hours = Math.floor(selectedEvent.duration / 60);
+      const mins = selectedEvent.duration % 60;
+      var strDur = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+      setDuration(strDur)
+      if (selectedEvent.duration == 0){
+        setDuration("")
+      }
     } else {
       setTitle("");
       setDate("");
@@ -37,11 +49,48 @@ const Sidebar = ({
       setEndTime("");
       setDescription("");
       setPriority("");
+      setCategory("بدون گروه");
+      setDuration("")
     }
+
+    fetchCategories();
   }, [selectedEvent, selectedDate]);
 
+  const fetchCategories = async () => {
+
+    if (cachedCategories.length != 0) {
+      return
+    }
+
+    try {
+      const response = await fetch("http://185.220.227.124:8080/getCategories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+        body: JSON.stringify({
+          user_name: getCookie("username"),
+          password: getCookie("password"),
+        }),
+      });
+      const data = await response.json();
+
+      data.categories.push({
+        Id: 0,
+        Name: "بدون گروه"
+      })
+
+      const defaultCategory = data.categories.find(cat => cat.Id === 0);
+      if (defaultCategory) {
+        setCategory(defaultCategory.Name);
+      }
+      setCachedCategories(data.categories)
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+    }
+  };
+
   const handleSubmit = () => {
-    console.log(selectedEvent);
 
     if (selectedEvent?.id) {
       fetch("http://185.220.227.124:8080/EditTask", {
@@ -51,7 +100,8 @@ const Sidebar = ({
           title: title,
           description: description,
           priority: priority,
-          duration: duration,
+          duration: Number(duration.split(':')[0]) * 60 + Number(duration.split(':')[1]),
+          category_name: category,
           start_time: moment(date)
             .set({
               hour: startTime.split(":")[0],
@@ -61,8 +111,8 @@ const Sidebar = ({
           end_time: moment(date)
             .set({ hour: endTime.split(":")[0], minute: endTime.split(":")[1] })
             .unix(),
-          user_name: "react",
-          password: "wasd1234",
+          user_name: getCookie("username"),
+          password: getCookie("password"),
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -119,9 +169,10 @@ const Sidebar = ({
           title: title,
           description: description,
           priority: priority,
-          duration: duration,
-          user_name: "react",
-          password: "wasd1234",
+          duration: Number(duration.split(':')[0]) * 60 + Number(duration.split(':')[1]),
+          category_name: category,
+          user_name: getCookie("username"),
+          password: getCookie("password"),
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -170,7 +221,22 @@ const Sidebar = ({
 
   const handleDelete = () => {
     if (selectedEvent) {
-      onDeleteEvent(selectedEvent.id);
+      fetch("http://185.220.227.124:8080/deleteTask", {
+        method: "POST",
+        body: JSON.stringify({
+          id: selectedEvent.id,
+          user_name: getCookie("username"),
+          password: getCookie("password"),
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          console.log(json);
+          onDeleteEvent(selectedEvent.id);
+        });
     }
   };
 
@@ -198,6 +264,20 @@ const Sidebar = ({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+
+          <label>Category</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {cachedCategories.map((cat) => (
+              <option key={cat.Id} value={cat.Name}>
+                {cat.Name}
+              </option>
+            ))}
+          </select>
+
+
           <label>priority</label>
           <input
             type="number"

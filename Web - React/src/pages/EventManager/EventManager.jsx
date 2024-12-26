@@ -1,29 +1,28 @@
 import { useState, useEffect } from "react";
 import { momentLocalizer } from "react-big-calendar";
+
 import BigCalendar from "jalali-react-big-calendar";
 import moment from "moment";
 import momentJl from "moment-jalaali";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import Sidebar from "./component/sidebar/Sidebar.jsx";
-import Login from "./component/login/Login.jsx";
-import Tasks from "./component/tasks/Tasks.jsx";
-import "./App.css";
-import { getCookie } from "./component/login/Login.jsx"
-import FetchCategories from "./apis/getCategories.jsx";
-import FetchTasks from "./apis/getTasks.jsx";
+
+// import Login from "../../component/login/Login.jsx";
+import { getCookie } from "../../component/login/Login.jsx";
+import Sidebar from "../../component/sidebar/Sidebar.jsx";
+import Navbar from "../../component/navbar/Navbar.jsx";
+import "./EventManager.css";
 
 momentJl.loadPersian({ usePersianDigits: false, dialect: "persian-modern" });
 const localizerJl = momentLocalizer(momentJl);
 
-const App = () => {
+const EventManager = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(moment().toDate());
   const [cachedTasks, setCachedTasks] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);
-  const [pageType, setTypeOfPage] = useState(null);
-  const [cachedCategories, setCachedCategories] = useState([]);
+  const [currentView, setCurrentView] = useState("month");
 
   useEffect(() => {
     const fetchTasks = async (date) => {
@@ -43,33 +42,38 @@ const App = () => {
         const startTime = now.startOf("JMonth").format("X");
         const endTime = now.endOf("JMonth").format("X");
 
-        const tasks = await FetchTasks(startTime, endTime)
+        const response = await fetch("http://185.220.227.124:8080/getTasks", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify({
+            start_time: startTime,
+            end_time: endTime,
+            user_name: getCookie("username"),
+            password: getCookie("password"),
+          }),
+        });
 
-        let categories = [];
-        if (cachedCategories.length == 0) {
-          categories = await FetchCategories()
-          setCachedCategories(categories)
+        const data = await response.json();
+        if (!data.tasks || !Array.isArray(data.tasks)) {
+          console.error("Invalid data format:", data);
+          return [];
         }
+        console.log(data.tasks);
 
-        const formattedEvents = tasks.map((task) => {
+        const formattedEvents = data.tasks.map((task) => {
           const startDate = new Date(task.PlanedTime.StartTime);
           const endDate = new Date(task.PlanedTime.EndTime);
-
-          categories.map((cat) => {
-            if (cat.Id == task.CategoryId) {
-              task.categoryName = cat.Name
-            }
-          })
 
           return {
             id: task.ID,
             title: task.Title,
             description: task.Description,
-            duration: task.Duration,
+            duration: task.duration,
             priority: task.Priority,
             start: startDate,
             end: endDate,
-            category: task.categoryName,
           };
         });
 
@@ -133,49 +137,18 @@ const App = () => {
     setCurrentDate(newDate);
   };
 
-  if (pageType == "tasks") {
-    return (
-      <div className="calender-container">
-        <div className="btn-container">
-          <button
-            className="btn-event"
-            onClick={() => {
-              setSelectedEvent(null);
-              toggleOffcanvas();
-            }}
-          >
-            Add Event
-          </button>
-          <Login />
-          <button
-            className="btn-event"
-            onClick={() => {
-              setTypeOfPage("calender");
-            }}
-          >
-            calender
-          </button>
-        </div>
-        <Sidebar
-          show={showOffcanvas}
-          onHide={() => setShowOffcanvas(false)}
-          onAddEvent={handleAddEvent}
-          onEditEvent={handleEditEvent}
-          onDeleteEvent={handleDeleteEvent}
-          selectedEvent={selectedEvent}
-          selectedDate={selectedDate}
-        />
-        <Tasks
-          onSelectEvent={handleSelectEvent}
-        >
-        </Tasks>
-      </div>
-    );
-  }
+  const getAgendaRange = () => {
+    const startOfMonth = momentJl(currentDate).startOf("jMonth").toDate();
+    const endOfMonth = momentJl(currentDate).endOf("jMonth").toDate();
+    return [startOfMonth, endOfMonth];
+  };
+
+  const dateToShow =
+    currentView === "agenda" ? getAgendaRange()[0] : currentDate;
 
   return (
-    <div className="calender-container">
-      <div className="btn-container">
+    <>
+      <Navbar>
         <button
           className="btn-event"
           onClick={() => {
@@ -185,50 +158,50 @@ const App = () => {
         >
           Add Event
         </button>
-        <Login />
-        <button
-          className="btn-event"
-          onClick={() => {
-            setTypeOfPage("tasks");
-          }}
-        >
-          tasks
-        </button>
+      </Navbar>
+      <div className="calender">
+        <div className="calender-container">
+          <Sidebar
+            show={showOffcanvas}
+            onHide={() => setShowOffcanvas(false)}
+            onAddEvent={handleAddEvent}
+            onEditEvent={handleEditEvent}
+            onDeleteEvent={handleDeleteEvent}
+            selectedEvent={selectedEvent}
+            selectedDate={selectedDate}
+          />
+          <BigCalendar
+            events={events}
+            localizer={localizerJl}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: "85vh" }}
+            onSelectEvent={handleSelectEvent}
+            onNavigate={handleNavigate}
+            onSelectSlot={handleSelectSlot}
+            selectable
+            date={dateToShow}
+            onView={(view) => {
+              console.log("View changed to:", view);
+              setCurrentView(view);
+            }}
+            messages={{
+              today: "امروز",
+              previous: "قبلی",
+              next: "بعدی",
+              month: "ماه",
+              week: "هفته",
+              day: "روز",
+              agenda: "رویدادها",
+              date: "تاریخ",
+              time: "زمان",
+              event: "رویداد",
+            }}
+          />
+        </div>
       </div>
-      <Sidebar
-        show={showOffcanvas}
-        onHide={() => setShowOffcanvas(false)}
-        onAddEvent={handleAddEvent}
-        onEditEvent={handleEditEvent}
-        onDeleteEvent={handleDeleteEvent}
-        selectedEvent={selectedEvent}
-        selectedDate={selectedDate}
-      />
-      <BigCalendar
-        events={events}
-        localizer={localizerJl}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: "85vh" }}
-        onSelectEvent={handleSelectEvent}
-        onNavigate={handleNavigate}
-        onSelectSlot={handleSelectSlot}
-        selectable
-        messages={{
-          today: "امروز",
-          previous: "قبلی",
-          next: "بعدی",
-          month: "ماه",
-          week: "هفته",
-          day: "روز",
-          agenda: "برنامه‌ها",
-          date: "تاریخ",
-          time: "زمان",
-          event: "رویداد",
-        }}
-      />
-    </div>
+    </>
   );
 };
 
-export default App;
+export default EventManager;

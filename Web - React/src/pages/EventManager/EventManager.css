@@ -1,0 +1,101 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+  }
+  
+  .card {
+    width: 500px;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .time {
+    font-size: 50px;
+  }
+  
+  button {
+    margin: 0 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background-color: #a8acb0;
+  }
+  
+  /* --------------------------------- */
+  
+  .rbc-calendar {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  /* ------------------------ */
+  
+  .btn-container {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .rbc-event {
+    text-align: center;
+  }
+  
+  .rbc-event:hover {
+    background-color: #0056b3;
+  }
+  /* ------------------------ */
+  
+  .calender {
+    padding: 0px 20px;
+  }
+  
+  
+  .navbar-calender {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    margin-bottom: 16px;
+    width: 100%;
+    height: 50px;
+  }
+  
+  .btn-event {
+    background-color: rgb(53, 142, 221);
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+    width: 100px;
+    border-radius: 10px;
+  }
+  
+  /* ------------------------ */
+  @media (max-width: 510px) {  
+    .rbc-event {
+      font-size: 8px;
+      width: 100%;
+      padding: 0;
+      height: 100%;
+    }
+  
+    .rbc-month-view {
+      font-size: 58%;
+    }
+
+    .calender {
+      padding: 0px;
+    }
+  }
+  

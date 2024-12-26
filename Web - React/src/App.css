@@ -14,7 +14,7 @@
   text-align: center;
 }
 
-.time{
+.time {
   font-size: 50px;
 }
 
@@ -32,21 +32,7 @@ button:hover {
   background-color: #a8acb0;
 }
 
-
 /* --------------------------------- */
-
-.calender-container{
-  padding: 18px;
-}
-
-.btn-events{
-  background-color: rgb(53, 142, 221);
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  color: white;
-}
-
 
 .rbc-calendar {
   direction: rtl;
@@ -57,23 +43,51 @@ button:hover {
 
 .btn-container {
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
 }
 
-
-.rbc-event{
+.rbc-event {
   text-align: center;
 }
 
 .rbc-event:hover {
   background-color: #0056b3;
 }
+/* ------------------------ */
 
+.calender {
+  padding: 13px;
+}
+
+
+.navbar-calender {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  margin-bottom: 16px;
+  width: 100%;
+  height: 50px;
+}
+
+.btn-event {
+  background-color: rgb(53, 142, 221);
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+  width: 100px;
+  border-radius: 10px;
+}
+
+/* ------------------------ */
 @media (max-width: 510px) {
   .calender-container {
     padding: 5px;
   }
 
-  .rbc-event{
+  .rbc-event {
     font-size: 8px;
     width: 100%;
     padding: 0;

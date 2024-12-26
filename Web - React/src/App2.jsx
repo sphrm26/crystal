@@ -16,7 +16,7 @@ const localizerJl = momentLocalizer(momentJl);
 const App = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState([]);
-  const [selectedEvent,  setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(moment().toDate());
   const [cachedTasks, setCachedTasks] = useState({});
   const [selectedDate, setSelectedDate] = useState(null);

@@ -33,7 +33,6 @@ const Sidebar = ({
       setEndTime(
         selectedEvent.end ? moment(selectedEvent.end).format("HH:mm") : ""
       );
-      console.log("sepehr: ", selectedEvent.category)
       setCategory(selectedEvent.category)
     } else {
       setTitle("");
@@ -42,7 +41,7 @@ const Sidebar = ({
       setEndTime("");
       setDescription("");
       setPriority("");
-      setCategory("");
+      setCategory("بدون گروه");
     }
 
     fetchCategories();
@@ -83,7 +82,6 @@ const Sidebar = ({
   };
 
   const handleSubmit = () => {
-    console.log(selectedEvent);
 
     if (selectedEvent?.id) {
       fetch("http://185.220.227.124:8080/EditTask", {

@@ -15,6 +15,7 @@ const Sidebar = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [isDone, setIsDone] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -34,12 +35,13 @@ const Sidebar = ({
         selectedEvent.end ? moment(selectedEvent.end).format("HH:mm") : ""
       );
       setCategory(selectedEvent.category)
+      setIsDone(selectedEvent.is_done)
 
       const hours = Math.floor(selectedEvent.duration / 60);
       const mins = selectedEvent.duration % 60;
       var strDur = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
       setDuration(strDur)
-      if (selectedEvent.duration == 0){
+      if (selectedEvent.duration == 0) {
         setDuration("")
       }
     } else {
@@ -50,7 +52,8 @@ const Sidebar = ({
       setDescription("");
       setPriority("");
       setCategory("بدون گروه");
-      setDuration("")
+      setDuration("");
+      setIsDone("");
     }
 
     fetchCategories();
@@ -93,6 +96,7 @@ const Sidebar = ({
   const handleSubmit = () => {
 
     if (selectedEvent?.id) {
+      console.log("sepehr: ", isDone)
       fetch("http://185.220.227.124:8080/EditTask", {
         method: "POST",
         body: JSON.stringify({
@@ -101,6 +105,7 @@ const Sidebar = ({
           description: description,
           priority: priority,
           duration: Number(duration.split(':')[0]) * 60 + Number(duration.split(':')[1]),
+          is_done: isDone,
           category_name: category,
           start_time: moment(date)
             .set({
@@ -170,6 +175,7 @@ const Sidebar = ({
           description: description,
           priority: priority,
           duration: Number(duration.split(':')[0]) * 60 + Number(duration.split(':')[1]),
+          is_done: isDone,
           category_name: category,
           user_name: getCookie("username"),
           password: getCookie("password"),
@@ -309,6 +315,20 @@ const Sidebar = ({
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
           />
+
+          <label>is done</label>
+          <select
+            value={isDone}
+            onChange={(e) => setIsDone(e.target.value)}
+          >
+            <option key={"false"} value="false">
+              false
+            </option>
+            <option key={"true"} value="true">
+              true
+            </option>
+          </select>
+
           <button className="btn btn-primary" onClick={handleSubmit}>
             {selectedEvent?.id ? "Update" : "Submit"}
           </button>

@@ -66,7 +66,9 @@ const Tasks = ({
             title: task.Title,
             start: task.PlanedTime.StartTime,
             end: task.PlanedTime.EndTime,
-            category: Category.Name
+            category: Category.Name,
+            duration: task.Duration,
+            is_done: task.IsDone,
         })
     };
 
@@ -99,7 +101,7 @@ const Tasks = ({
                         <h2 className="column-title">{name}</h2>
                         <div className="task-list">
                             {tasks.map(task => (
-                                <div className="task" key={task.ID} onClick={() => hanleClickedEvent(task)}>
+                                <div className={`${task.IsDone == true ? "done-task" : "task"}`}  key={task.ID} onClick={() => hanleClickedEvent(task)}>
                                     <h3 className="task-title">{task.Title}</h3>
                                     <p className="task-desc">{task.Description}</p>
                                 </div>

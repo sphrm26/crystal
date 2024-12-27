@@ -8,7 +8,6 @@ import Sidebar from "./component/sidebar/Sidebar.jsx";
 import Login from "./component/login/Login.jsx";
 import Tasks from "./component/tasks/Tasks.jsx";
 import "./App.css";
-import { getCookie } from "./component/login/Login.jsx"
 import FetchCategories from "./apis/getCategories.jsx";
 import FetchTasks from "./apis/getTasks.jsx";
 
@@ -70,6 +69,7 @@ const App = () => {
             start: startDate,
             end: endDate,
             category: task.categoryName,
+            is_done: task.IsDone,
           };
         });
 
